@@ -250,6 +250,35 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .share-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--blue-mid);color:var(--white);border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;min-height:48px}
 .share-btn:active{opacity:.85}
 .url-banner{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:12px;color:#9a3412;margin-bottom:12px;line-height:1.6}
+
+/* ===== 기관 설정 버튼 ===== */
+.hdr{position:relative}
+.cfg-btn{margin-top:8px;background:none;border:1px solid var(--gray200);border-radius:8px;padding:5px 12px;font-size:11px;color:var(--gray500);cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:inherit}
+.cfg-btn:hover{background:var(--gray100);color:var(--blue)}
+
+/* ===== 공통 모달 오버레이 ===== */
+.gs-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:600;align-items:center;justify-content:center;padding:16px}
+.gs-overlay.open{display:flex}
+.gs-modal{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:420px;box-shadow:0 12px 40px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto}
+.gs-title{font-size:16px;font-weight:700;color:var(--blue);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.gs-field{margin-bottom:12px}
+.gs-field label{display:block;font-size:11px;font-weight:700;color:var(--gray500);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.gs-field input{width:100%;padding:10px 12px;border:1.5px solid var(--gray200);border-radius:8px;font-size:14px;outline:none;transition:border-color .2s;font-family:inherit;color:var(--gray900)}
+.gs-field input:focus{border-color:var(--accent)}
+.gs-field .gs-hint{font-size:11px;color:var(--gray500);margin-top:3px;line-height:1.4}
+.gs-divider{border:none;border-top:1px solid var(--gray200);margin:14px 0}
+.gs-note{font-size:11px;color:var(--gold);background:var(--gold-light);padding:8px 10px;border-radius:6px;margin-top:4px;line-height:1.5}
+.gs-actions{display:flex;gap:8px;margin-top:16px}
+.gs-save-btn{flex:1;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.gs-save-btn:hover{background:var(--blue-mid)}
+.gs-save-btn:disabled{background:var(--gray300);cursor:not-allowed}
+.gs-cancel-btn{padding:12px 20px;background:var(--gray100);color:var(--gray700);border:none;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit}
+.gs-cancel-btn:hover{background:var(--gray200)}
+
+/* ===== 실적 저장 버튼 ===== */
+.sheet-save-btn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-family:inherit;letter-spacing:-.3px}
+.sheet-save-btn:hover{background:#15803d}
+.sheet-cfg-needed{font-size:12px;color:var(--gray500);text-align:center;margin-top:8px}
 </style>
 </head>
 <body>
@@ -260,7 +289,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
   <div class="hdr">
     <span class="hdr-ico">&#128641;</span>
     <h1>드론 업무 예산절감 계산기</h1>
-    <p>양주시 AI드론정책팀 &middot; 직접수행 vs 외부용역 비교 v5.0</p>
+    <p id="hdrOrg">양주시 AI드론정책팀 &middot; 직접수행 vs 외부용역 비교 v5.0</p>
+    <button class="cfg-btn" id="cfgBtn">&#9881;&#65039; 기관 설정</button>
   </div>
   <div class="prg-wrap">
     <div class="prg-dots" id="pDots"></div>
@@ -294,6 +324,64 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
     <div class="fb-actions">
       <button class="fb-cancel-btn" id="fbCancel">취소</button>
       <button class="fb-send-btn" id="fbSend">&#128231; 보내기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 기관 설정 모달 ===== -->
+<div class="gs-overlay" id="cfgOverlay">
+  <div class="gs-modal">
+    <div class="gs-title">&#9881;&#65039; 기관 설정</div>
+    <div class="gs-field">
+      <label>기관명</label>
+      <input type="text" id="cfgOrg" placeholder="예: 양주시 AI드론정책팀">
+    </div>
+    <div class="gs-field">
+      <label>담당자 이름</label>
+      <input type="text" id="cfgName" placeholder="예: 김지운">
+    </div>
+    <hr class="gs-divider">
+    <div class="gs-title" style="font-size:14px">&#128202; Google Sheets 연동</div>
+    <div class="gs-field">
+      <label>Apps Script URL</label>
+      <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/...">
+      <div class="gs-hint">Apps Script 배포 후 웹 앱 URL을 붙여넣으세요</div>
+    </div>
+    <div class="gs-field">
+      <label>시크릿 키</label>
+      <input type="text" id="cfgKey" placeholder="관리자로부터 받은 키 입력">
+      <div class="gs-note">&#9888;&#65039; URL과 키는 관리자에게 문의하세요.<br>URL이 없으면 실적 저장 기능을 사용할 수 없습니다.</div>
+    </div>
+    <div class="gs-actions">
+      <button class="gs-cancel-btn" id="cfgCancel">취소</button>
+      <button class="gs-save-btn" id="cfgSave">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 실적 저장 모달 ===== -->
+<div class="gs-overlay" id="sheetOverlay">
+  <div class="gs-modal">
+    <div class="gs-title">&#128228; Google Sheets에 실적 저장</div>
+    <div class="gs-field">
+      <label>기관명</label>
+      <input type="text" id="shOrg" placeholder="기관명">
+    </div>
+    <div class="gs-field">
+      <label>담당자</label>
+      <input type="text" id="shName" placeholder="담당자 이름">
+    </div>
+    <div class="gs-field">
+      <label>사업명 <span style="color:var(--red)">*</span></label>
+      <input type="text" id="shProject" placeholder="예: 장흥면 토지 현황조사">
+    </div>
+    <div class="gs-field">
+      <label>비고</label>
+      <input type="text" id="shNote" placeholder="선택 입력">
+    </div>
+    <div class="gs-actions">
+      <button class="gs-cancel-btn" id="shCancel">취소</button>
+      <button class="gs-save-btn" id="shSave">&#128228; 저장하기</button>
     </div>
   </div>
 </div>
@@ -1073,6 +1161,7 @@ function r4(){
   h+='<strong style="color:var(--green)">'+fmt(sv)+'</strong>\uc758 \uc608\uc0b0\uc744 \uc808\uac10\ud558\uc600\uc2b5\ub2c8\ub2e4. ';
   h+='\uc774\ub294 \uc678\ubd80 \ubc1c\uc8fc \ube44\uc6a9\uc758 <strong style="color:var(--green)">'+rt.toFixed(1)+'%</strong>\uc5d0 \ud574\ub2f9\ud569\ub2c8\ub2e4.</p>';
   h+='<div style="font-size:12px;color:var(--gray500);margin-top:10px;padding-top:10px;border-top:1px solid var(--gray100)">&#128308; \uc7a5\ube44 \uac10\uac00\uc0c1\uac01\ube44 (\ucc38\uace0): '+fmt(dep)+' ('+S.days+'\uc77c \uae30\uc900) &mdash; \uc608\uc0b0\uc808\uac10 \uacc4\uc0b0 \ubbf8\ud3ec\ud568. \ub4dc\ub860 \uad50\uccb4\u00b7\ucd94\uac00 \uad6c\ub9e4 \uc608\uc0b0 \uc694\uccad \uadfc\uac70\ub85c \ud65c\uc6a9\ud558\uc138\uc694.</div></div>';
+  h+='<button class="sheet-save-btn" onclick="openSaveSheet()">&#128228; Google Sheets에 실적 저장</button>';
   return h;
 }
 
@@ -1698,6 +1787,119 @@ document.getElementById('fbTypeRow').addEventListener('click', function(e){
 });
 
 /* ===== 시작 ===== */
+/* ===== 기관 설정 ===== */
+var _cfg = {org:'', name:'', url:'', key:''};
+
+function loadCfg(){
+  var s = localStorage.getItem('droneCfg');
+  if(s){ try{ _cfg = JSON.parse(s); }catch(e){} }
+  var hdr = document.getElementById('hdrOrg');
+  if(hdr && _cfg.org){
+    hdr.textContent = _cfg.org + ' · 직접수행 vs 외부용역 비교 v5.0';
+  }
+}
+
+function openCfg(){
+  document.getElementById('cfgOrg').value = _cfg.org || '';
+  document.getElementById('cfgName').value = _cfg.name || '';
+  document.getElementById('cfgUrl').value = _cfg.url || '';
+  document.getElementById('cfgKey').value = _cfg.key || '';
+  document.getElementById('cfgOverlay').classList.add('open');
+}
+
+function closeCfg(){
+  document.getElementById('cfgOverlay').classList.remove('open');
+}
+
+function saveCfg(){
+  _cfg.org = document.getElementById('cfgOrg').value.trim();
+  _cfg.name = document.getElementById('cfgName').value.trim();
+  _cfg.url = document.getElementById('cfgUrl').value.trim();
+  _cfg.key = document.getElementById('cfgKey').value.trim();
+  localStorage.setItem('droneCfg', JSON.stringify(_cfg));
+  var hdr = document.getElementById('hdrOrg');
+  if(hdr){
+    hdr.textContent = (_cfg.org || '드론 예산절감 계산기') + ' · 직접수행 vs 외부용역 비교 v5.0';
+  }
+  closeCfg();
+  toast('기관 설정이 저장되었습니다');
+}
+
+/* ===== 실적 저장 (Google Sheets) ===== */
+function openSaveSheet(){
+  if(!_cfg.url){
+    toast('⚠️ 분저 ⚙️ 기관 설정에서 Apps Script URL을 먼저 입력해주세요');
+    openCfg();
+    return;
+  }
+  if(S.saving === undefined || S.saving === null){
+    toast('먼저 계산을 완료하세요 (STEP 4까지 진행)');
+    return;
+  }
+  document.getElementById('shOrg').value = _cfg.org || '';
+  document.getElementById('shName').value = _cfg.name || '';
+  document.getElementById('shProject').value = '';
+  document.getElementById('shNote').value = '';
+  document.getElementById('sheetOverlay').classList.add('open');
+  setTimeout(function(){ document.getElementById('shProject').focus(); }, 200);
+}
+
+function closeSaveSheet(){
+  document.getElementById('sheetOverlay').classList.remove('open');
+}
+
+function doSaveSheet(){
+  var project = document.getElementById('shProject').value.trim();
+  if(!project){ toast('사업명을 입력해주세요'); return; }
+  var btn = document.getElementById('shSave');
+  btn.disabled = true;
+  btn.textContent = '저장 중...';
+  var payload = {
+    key: _cfg.key,
+    org: document.getElementById('shOrg').value.trim(),
+    name: document.getElementById('shName').value.trim(),
+    project: project,
+    area: S.area,
+    terrain: S.terrain || '',
+    gsd: S.gsd || '',
+    external: S.extQuote > 0 ? S.extQuote : S.ext,
+    direct: calcDir(),
+    saving: S.saving,
+    rate: S.rate ? S.rate.toFixed(1) : '0',
+    note: document.getElementById('shNote').value.trim()
+  };
+  fetch(_cfg.url, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain'},
+    body: JSON.stringify(payload),
+    redirect: 'follow'
+  }).then(function(r){ return r.json(); }).then(function(d){
+    btn.disabled = false;
+    btn.textContent = '📤 저장하기';
+    if(d.success){
+      closeSaveSheet();
+      toast('✅ Google Sheets에 실적이 저장되었습니다');
+      gaEvent('sheet_save', {org: payload.org, saving: S.saving});
+    } else {
+      toast('저장 실패: ' + (d.msg || '알 수 없는 오류'));
+    }
+  }).catch(function(){
+    btn.disabled = false;
+    btn.textContent = '📤 저장하기';
+    toast('저장 실패: 네트워크 오류 — URL을 다시 확인해주세요');
+  });
+}
+
+document.getElementById('cfgBtn').addEventListener('click', openCfg);
+document.getElementById('cfgCancel').addEventListener('click', closeCfg);
+document.getElementById('cfgSave').addEventListener('click', saveCfg);
+document.getElementById('cfgOverlay').addEventListener('click', function(e){ if(e.target===this) closeCfg(); });
+document.getElementById('shCancel').addEventListener('click', closeSaveSheet);
+document.getElementById('shSave').addEventListener('click', doSaveSheet);
+document.getElementById('sheetOverlay').addEventListener('click', function(e){ if(e.target===this) closeSaveSheet(); });
+
+
+loadCfg();
 loadFromUrl();
 render();
 </script>
