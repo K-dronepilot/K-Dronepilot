@@ -1653,11 +1653,11 @@ function sendFb(){
   var txt=document.getElementById('fbText').value.trim();
   if(!txt){toast('건의 내용을 입력해주세요'); return;}
   var typeLabel=FB_TYPES[_fbType]||'기타';
-  var title=encodeURIComponent('['+typeLabel+'] 사용자 건의');
-  var body=encodeURIComponent('**건의 유형:** '+typeLabel+'\n\n**내용:**\n'+txt+'\n\n---\n*드론 예산절감 계산기 v5.0에서 전송*');
-  window.open('https://github.com/K-dronepilot/K-Dronepilot/issues/new?title='+title+'&body='+body,'_blank');
+  var subject=encodeURIComponent('[드론계산기 '+typeLabel+'] 사용자 건의');
+  var body=encodeURIComponent('건의 유형: '+typeLabel+'\r\n\r\n내용:\r\n'+txt+'\r\n\r\n---\r\n드론 예산절감 계산기 v5.0에서 전송');
+  window.location.href='mailto:Tarotean@naver.com?subject='+subject+'&body='+body;
   closeFb();
-  toast('건의가 접수되었습니다. 감사합니다! &#128591;');
+  toast('이메일 앱이 열립니다. 감사합니다! &#128591;');
 }
 
 document.getElementById('fbFab').addEventListener('click', openFb);
