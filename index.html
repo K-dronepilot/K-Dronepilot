@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="드론절감계산기">
 <meta name="theme-color" content="#1a3a5c">
-<title>드론 업무 예산절감 계산기 v5.0</title>
+<title>드론 업무 경제성 분석 플랫폼</title>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DVLH011DEY"></script>
 <script>
@@ -279,6 +279,55 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .sheet-save-btn{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-family:inherit;letter-spacing:-.3px}
 .sheet-save-btn:hover{background:#15803d}
 .sheet-cfg-needed{font-size:12px;color:var(--gray500);text-align:center;margin-top:8px}
+
+/* ===== 최종 보고서 모달 ===== */
+.rpt-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:700;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto}
+.rpt-overlay.open{display:flex}
+.rpt-paper{background:#fff;width:100%;max-width:680px;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:auto;overflow:hidden}
+.rpt-top{background:var(--blue);color:#fff;padding:20px 24px}
+.rpt-top-title{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.rpt-top-sub{font-size:12px;opacity:.8}
+.rpt-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.rpt-meta-item{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 12px;font-size:11px}
+.rpt-body{padding:20px 24px}
+.rpt-section{margin-bottom:20px}
+.rpt-section-title{font-size:13px;font-weight:700;color:var(--blue);border-bottom:2px solid var(--blue-light);padding-bottom:6px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.rpt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rpt-item{background:#f8fafc;border-radius:8px;padding:10px 12px}
+.rpt-item-lbl{font-size:11px;color:var(--gray500);margin-bottom:3px}
+.rpt-item-val{font-size:14px;font-weight:600;color:var(--gray800)}
+.rpt-table{width:100%;border-collapse:collapse;font-size:13px}
+.rpt-table td{padding:8px 10px;border-bottom:1px solid var(--gray100)}
+.rpt-table td:last-child{text-align:right;font-weight:600}
+.rpt-table .rpt-total td{background:var(--green-light);font-weight:700;font-size:15px;color:var(--green);border-bottom:none}
+.rpt-hero{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #86efac;border-radius:12px;padding:20px;text-align:center;margin-bottom:20px}
+.rpt-hero-lbl{font-size:13px;color:#166534;margin-bottom:6px}
+.rpt-hero-amt{font-size:32px;font-weight:800;color:var(--green);letter-spacing:-1px}
+.rpt-hero-rate{font-size:14px;color:#166534;margin-top:4px;font-weight:600}
+.rpt-hero-row{display:flex;gap:12px;margin-top:12px;justify-content:center}
+.rpt-hero-card{background:rgba(255,255,255,.7);border-radius:8px;padding:8px 16px;font-size:12px;text-align:center}
+.rpt-hero-card-lbl{color:var(--gray500);margin-bottom:2px}
+.rpt-hero-card-val{font-weight:700;color:var(--gray800)}
+.rpt-opinion{background:#eff6ff;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 16px;font-size:13px;color:#1e3a5f;line-height:1.8}
+.rpt-actions{padding:16px 24px;background:#f8fafc;border-top:1px solid var(--gray100);display:flex;gap:8px;flex-wrap:wrap}
+.rpt-btn-main{flex:1;min-width:140px;padding:13px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.rpt-btn-main:hover{background:#15803d}
+.rpt-btn-sub{padding:13px 16px;background:#fff;color:var(--gray700);border:1px solid var(--gray200);border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit}
+.rpt-btn-sub:hover{background:var(--gray100)}
+.rpt-btn-close{padding:13px 16px;background:#fff;color:var(--gray500);border:1px solid var(--gray200);border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit}
+@media print{.rpt-overlay{position:absolute;background:none}.rpt-actions{display:none}}
+
+/* ===== 기관설정 버튼 펄스 ===== */
+@keyframes cfg-pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.cfg-btn.pulse{border-color:#ef4444;color:#ef4444;animation:cfg-pulse 1.5s infinite}
+
+/* ===== STEP 0 기관설정 화면 ===== */
+.step0-wrap{padding:8px 0}
+.step0-field{margin-bottom:14px}
+.step0-field label{display:block;font-size:13px;font-weight:600;color:var(--gray700);margin-bottom:6px}
+.step0-field input{width:100%;padding:12px 14px;border:1.5px solid var(--gray200);border-radius:10px;font-size:15px;font-family:inherit;box-sizing:border-box;transition:border-color .2s}
+.step0-field input:focus{outline:none;border-color:var(--blue)}
+.step0-saved{margin-top:14px;padding:11px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:12px;color:#166534}
 </style>
 </head>
 <body>
@@ -288,8 +337,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 <div class="app" id="mainApp">
   <div class="hdr">
     <span class="hdr-ico">&#128641;</span>
-    <h1>드론 업무 예산절감 계산기</h1>
-    <p id="hdrOrg">양주시 AI드론정책팀 &middot; 직접수행 vs 외부용역 비교 v5.0</p>
+    <h1>드론 업무 경제성 분석 플랫폼</h1>
+    <p id="hdrOrg">직접수행 vs 외부용역 &middot; 예산절감 효과 분석</p>
     <button class="cfg-btn" id="cfgBtn">&#9881;&#65039; 기관 설정</button>
   </div>
   <div class="prg-wrap">
@@ -328,6 +377,25 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
   </div>
 </div>
 
+<!-- ===== 최종 보고서 모달 ===== -->
+<div class="rpt-overlay" id="rptOverlay">
+  <div class="rpt-paper">
+    <div class="rpt-top">
+      <div class="rpt-top-title">&#128196; 드론 업무 직접수행 경제성 검토 보고서</div>
+      <div class="rpt-top-sub">드론 업무 경제성 분석 플랫폼 · 직접수행 vs 외부용역 비교분석</div>
+      <div class="rpt-meta" id="rptMeta"></div>
+    </div>
+    <div class="rpt-body" id="rptBody"></div>
+    <div class="rpt-actions">
+      <button class="rpt-btn-main" id="rptAddHist">&#10010; 실적에 추가</button>
+      <button class="rpt-btn-sub" id="rptOdt">&#128203; 보고서 복사</button>
+      <button class="rpt-btn-sub" id="rptPdf">&#128195; PDF 저장</button>
+      <button class="rpt-btn-sub" id="rptTxt">&#128203; 한글 복사</button>
+      <button class="rpt-btn-close" id="rptClose">&#10005; 닫기</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== 기관 설정 모달 ===== -->
 <div class="gs-overlay" id="cfgOverlay">
   <div class="gs-modal">
@@ -340,18 +408,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
       <label>담당자 이름</label>
       <input type="text" id="cfgName" placeholder="예: 김지운">
     </div>
-    <hr class="gs-divider">
-    <div class="gs-title" style="font-size:14px">&#128202; Google Sheets 연동</div>
-    <div class="gs-field">
-      <label>Apps Script URL</label>
-      <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/...">
-      <div class="gs-hint">Apps Script 배포 후 웹 앱 URL을 붙여넣으세요</div>
-    </div>
-    <div class="gs-field">
-      <label>시크릿 키</label>
-      <input type="text" id="cfgKey" placeholder="관리자로부터 받은 키 입력">
-      <div class="gs-note">&#9888;&#65039; URL과 키는 관리자에게 문의하세요.<br>URL이 없으면 실적 저장 기능을 사용할 수 없습니다.</div>
-    </div>
+    <input type="hidden" id="cfgUrl">
+    <input type="hidden" id="cfgKey">
     <div class="gs-actions">
       <button class="gs-cancel-btn" id="cfgCancel">취소</button>
       <button class="gs-save-btn" id="cfgSave">저장</button>
@@ -359,32 +417,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
   </div>
 </div>
 
-<!-- ===== 실적 저장 모달 ===== -->
-<div class="gs-overlay" id="sheetOverlay">
-  <div class="gs-modal">
-    <div class="gs-title">&#128228; Google Sheets에 실적 저장</div>
-    <div class="gs-field">
-      <label>기관명</label>
-      <input type="text" id="shOrg" placeholder="기관명">
-    </div>
-    <div class="gs-field">
-      <label>담당자</label>
-      <input type="text" id="shName" placeholder="담당자 이름">
-    </div>
-    <div class="gs-field">
-      <label>사업명 <span style="color:var(--red)">*</span></label>
-      <input type="text" id="shProject" placeholder="예: 장흥면 토지 현황조사">
-    </div>
-    <div class="gs-field">
-      <label>비고</label>
-      <input type="text" id="shNote" placeholder="선택 입력">
-    </div>
-    <div class="gs-actions">
-      <button class="gs-cancel-btn" id="shCancel">취소</button>
-      <button class="gs-save-btn" id="shSave">&#128228; 저장하기</button>
-    </div>
-  </div>
-</div>
 
 <script>
 /* ===== 2026 표준품셈 노임단가 ===== */
@@ -1161,7 +1193,6 @@ function r4(){
   h+='<strong style="color:var(--green)">'+fmt(sv)+'</strong>\uc758 \uc608\uc0b0\uc744 \uc808\uac10\ud558\uc600\uc2b5\ub2c8\ub2e4. ';
   h+='\uc774\ub294 \uc678\ubd80 \ubc1c\uc8fc \ube44\uc6a9\uc758 <strong style="color:var(--green)">'+rt.toFixed(1)+'%</strong>\uc5d0 \ud574\ub2f9\ud569\ub2c8\ub2e4.</p>';
   h+='<div style="font-size:12px;color:var(--gray500);margin-top:10px;padding-top:10px;border-top:1px solid var(--gray100)">&#128308; \uc7a5\ube44 \uac10\uac00\uc0c1\uac01\ube44 (\ucc38\uace0): '+fmt(dep)+' ('+S.days+'\uc77c \uae30\uc900) &mdash; \uc608\uc0b0\uc808\uac10 \uacc4\uc0b0 \ubbf8\ud3ec\ud568. \ub4dc\ub860 \uad50\uccb4\u00b7\ucd94\uac00 \uad6c\ub9e4 \uc608\uc0b0 \uc694\uccad \uadfc\uac70\ub85c \ud65c\uc6a9\ud558\uc138\uc694.</div></div>';
-  h+='<button class="sheet-save-btn" onclick="openSaveSheet()">&#128228; Google Sheets에 실적 저장</button>';
   return h;
 }
 
@@ -1205,6 +1236,7 @@ function r5(){
   h+='<button class="ex-btn" id="exCsv"><span class="ei2">&#128202;</span><span class="et">\uc5d1\uc140 \uc800\uc7a5</span><span class="ed">CSV \uc0b0\ucd9c\ub0b4\uc5ed\uc11c</span></button>';
   h+='<button class="ex-btn" id="exPdf"><span class="ei2">&#128196;</span><span class="et">PDF \uc800\uc7a5</span><span class="ed">\uacf5\uc2dd \ucca8\ubd80\ud30c\uc77c\uc6a9</span></button>';
   h+='<button class="ex-btn" id="exImg"><span class="ei2">&#128444;&#65039;</span><span class="et">\uc774\ubbf8\uc9c0 \uc800\uc7a5</span><span class="ed">PNG \uacf5\uc720\uc6a9</span></button>';
+  h+='<button class="ex-btn" id="exOdt"><span class="ei2">&#128203;</span><span class="et">\ubcf4\uace0\uc11c \ubcf5\uc0ac</span><span class="ed">\ud55c\uae00\u00b7\uc6cc\ub4dc\uc5d0 \ubd99\uc5ec\ub123\uae30</span></button>';
   h+='</div>';
   h+='<button class="share-btn" id="exUrl">';
   h+='&#128279; \uc870\uac74 \uacf5\uc720 URL \ubcf5\uc0ac &nbsp;';
@@ -1225,12 +1257,37 @@ function setGsd(v){
   var gq=qs('gQ');   if(gq){gq.className='gsd-q '+gsdQcls(v);gq.innerHTML=gsdQtxt(v);}
 }
 
+/* ===== STEP 0 — 기관 설정 화면 ===== */
+function r0(){
+  var h='<div class="card"><div class="welcome-box">';
+  h+='<div class="welcome-ico">&#127968;</div>';
+  h+='<div class="welcome-title">시작하기 전에 기관 정보를 입력해주세요</div>';
+  h+='<div style="font-size:12px;color:var(--gray500);margin-top:4px">입력한 정보는 이 기기에만 저장되며 실적 기록에 사용됩니다</div>';
+  h+='</div><div class="step0-wrap">';
+  h+='<div class="step0-field"><label>기관명</label>';
+  h+='<input type="text" id="step0Org" placeholder="예: 양주시 AI드론정책팀" value="'+esc(_cfg.org||'')+'"></div>';
+  h+='<div class="step0-field"><label>담당자 이름</label>';
+  h+='<input type="text" id="step0Name" placeholder="예: 홍길동" value="'+esc(_cfg.name||'')+'"></div>';
+  if(_cfg.org) h+='<div class="step0-saved">&#10003; 이전 설정이 불러와졌습니다. 수정하거나 그대로 다음으로 진행하세요.</div>';
+  h+='</div></div>';
+  return h;
+}
+
 /* ===== 렌더 ===== */
 var RF=[null,r1,r2,r3,r4,r5];
 var STEPS=['\uc0ac\uc5c5 \uc815\ubcf4 \uc785\ub825','\uc678\ubd80 \uc6a9\uc5ed \ub2e8\uac00','\uc9c1\uc811 \uc218\ud589 \ube44\uc6a9','\uc608\uc0b0 \uc808\uac10 \uacb0\uacfc','\ubcf4\uace0\uc11c \ubc0f \uc2e4\uc801'];
 
 function render(){
   var s=S.step;
+  if(s===0){
+    qs('pDots').innerHTML='';
+    qs('sTitle').textContent='\uae30\uad00 \uc124\uc815';
+    qs('sCnt').textContent='\uc2dc\uc791 \uc804';
+    qs('bPrev').disabled=true;
+    qs('bNext').innerHTML='\ub2e4\uc74c &rarr;';
+    qs('sContent').innerHTML=r0();
+    return;
+  }
   var dots='';
   for(var i=1;i<=5;i++) dots+='<div class="prg-dot'+(i<s?' done':i===s?' active':'')+'"></div>';
   qs('pDots').innerHTML=dots;
@@ -1433,6 +1490,7 @@ function bindStep5(){
   var ec=qs('exCsv');   if(ec) ec.onclick=doCsv;
   var ep=qs('exPdf');   if(ep) ep.onclick=doPdf;
   var ei=qs('exImg');   if(ei) ei.onclick=function(){toast('\ub2e4\uc74c \ubc84\uc804 \uc9c0\uc6d0 \uc608\uc815');};
+  var eo=qs('exOdt');   if(eo) eo.onclick=copyReport;
   var eu=qs('exUrl');   if(eu) eu.onclick=doShareUrl;
   var cp=qs('cpyBtn');  if(cp) cp.onclick=doCopy;
 
@@ -1450,10 +1508,24 @@ function bindStep5(){
 /* ===== 네비게이션 ===== */
 function go(d){
   if(d>0){
-    if(S.step===1&&(!S.area||S.area<=0)){toast('\uce2c\uc601 \uba74\uc801\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694'); return;}
+    if(S.step===0){
+      var org=(document.getElementById('step0Org')||{}).value||'';
+      var nm=(document.getElementById('step0Name')||{}).value||'';
+      if(!org.trim()){toast('\uae30\uad00\uba85\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694'); return;}
+      _cfg.org=org.trim(); _cfg.name=nm.trim();
+      if(!_cfg.url) _cfg.url=_SCRIPT_URL;
+      if(!_cfg.key) _cfg.key=_SCRIPT_KEY;
+      localStorage.setItem('droneCfg',JSON.stringify(_cfg));
+      var hdr=document.getElementById('hdrOrg');
+      if(hdr) hdr.textContent=_cfg.org+' \u00b7 \uc9c1\uc811\uc218\ud589 vs \uc678\ubd80\uc6a9\uc5ed \u00b7 \uc608\uc0b0\uc808\uac10 \ud6a8\uacfc \ubd84\uc11d';
+      updateCfgBtn();
+      S.step=1; render(); window.scrollTo(0,0); return;
+    }
+    if(S.step===1&&(!S.area||S.area<=0)){toast('\ucd2c\uc601 \uba74\uc801\uc744 \uc785\ub825\ud574\uc8fc\uc138\uc694'); return;}
+    if(S.step===5){openReport(); return;}
     if(S.step<5){S.step++; render(); window.scrollTo(0,0);}
   } else {
-    if(S.step>1){S.step--; render(); window.scrollTo(0,0);}
+    if(S.step>0){S.step--; render(); window.scrollTo(0,0);}
   }
 }
 
@@ -1468,6 +1540,7 @@ function addHist(){
   });
   gaEvent('calc_complete',{area:S.area,gsd:S.gsd,terrain:S.terrain,saving:S.saving,rate:Math.round(S.rate)});
   saveLs(); toast('\uc2e4\uc801\uc774 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4'); render();
+  autoSaveSheet();
 }
 
 /* ===== 보고서 ===== */
@@ -1635,7 +1708,7 @@ function makePdfHtml(){
   /* 푸터 */
   h+='<div class="footer">';
   h+='양주시 기업지원과 AI드론정책팀';
-  h+=' &nbsp;|&nbsp; 드론 업무 예산절감 계산기 v5.0';
+  h+=' &nbsp;|&nbsp; 드론 업무 경제성 분석 플랫폼';
   h+=' &nbsp;|&nbsp; '+d;
   h+='</div>';
 
@@ -1788,15 +1861,28 @@ document.getElementById('fbTypeRow').addEventListener('click', function(e){
 
 /* ===== 시작 ===== */
 /* ===== 기관 설정 ===== */
-var _cfg = {org:'', name:'', url:'', key:''};
+var _SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztCaapN3HXtWLwJNrQhfWUlkfSfCJlw15iDErsKRJNQWKgJ4GHO257VGBXHLVg4G1L/exec';
+var _SCRIPT_KEY = 'DRONE2026KEY';
+var _cfg = {org:'', name:'', url:_SCRIPT_URL, key:_SCRIPT_KEY};
+
+function updateCfgBtn(){
+  var btn=document.getElementById('cfgBtn');
+  if(!btn) return;
+  if(!_cfg.org) btn.classList.add('pulse');
+  else btn.classList.remove('pulse');
+}
 
 function loadCfg(){
   var s = localStorage.getItem('droneCfg');
   if(s){ try{ _cfg = JSON.parse(s); }catch(e){} }
+  if(!_cfg.url) _cfg.url = _SCRIPT_URL;
+  if(!_cfg.key) _cfg.key = _SCRIPT_KEY;
+  if(!_cfg.org) S.step = 0;
   var hdr = document.getElementById('hdrOrg');
   if(hdr && _cfg.org){
-    hdr.textContent = _cfg.org + ' · 직접수행 vs 외부용역 비교 v5.0';
+    hdr.textContent = _cfg.org + ' · 직접수행 vs 외부용역 · 예산절감 효과 분석';
   }
+  updateCfgBtn();
 }
 
 function openCfg(){
@@ -1814,51 +1900,218 @@ function closeCfg(){
 function saveCfg(){
   _cfg.org = document.getElementById('cfgOrg').value.trim();
   _cfg.name = document.getElementById('cfgName').value.trim();
-  _cfg.url = document.getElementById('cfgUrl').value.trim();
-  _cfg.key = document.getElementById('cfgKey').value.trim();
+  _cfg.url = _SCRIPT_URL;
+  _cfg.key = _SCRIPT_KEY;
   localStorage.setItem('droneCfg', JSON.stringify(_cfg));
   var hdr = document.getElementById('hdrOrg');
   if(hdr){
-    hdr.textContent = (_cfg.org || '드론 예산절감 계산기') + ' · 직접수행 vs 외부용역 비교 v5.0';
+    hdr.textContent = (_cfg.org || '드론 업무 경제성 분석 플랫폼') + ' · 직접수행 vs 외부용역 · 예산절감 효과 분석';
   }
+  updateCfgBtn();
   closeCfg();
   toast('기관 설정이 저장되었습니다');
 }
 
-/* ===== 실적 저장 (Google Sheets) ===== */
-function openSaveSheet(){
-  if(!_cfg.url){
-    toast('⚠️ 분저 ⚙️ 기관 설정에서 Apps Script URL을 먼저 입력해주세요');
-    openCfg();
-    return;
+/* ===== 최종 보고서 ===== */
+function openReport(){
+  var dir=calcDir();
+  var baseExt=S.extQuote>0?S.extQuote:S.ext;
+  var sv=Math.max(0,baseExt-dir);
+  var rt=baseExt>0?(sv/baseExt*100):0;
+  S.saving=sv; S.rate=rt;
+  var dep=calcDep();
+  var today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var droneObj=DRONES.filter(function(d){return d.v===S.drone;})[0]||{n:S.drone};
+  var swObj=SWLIST.filter(function(s){return s.v===S.sw;})[0]||{n:S.sw};
+  var extLbl=S.extQuote>0?'실제 견적서 (VAT포함)':'표준품셈 기준 추정';
+  var opinion=sv>0
+    ? '분석 결과, 외부용역 대비 직접수행 시 <strong>'+fmt(sv)+'('+rt.toFixed(1)+'%)</strong>의 예산 절감이 가능합니다. 보유 장비와 인력을 활용한 직접수행이 경제적으로 타당하며, 절감 예산은 추가 사업 추진 또는 장비 고도화에 활용할 수 있습니다.'
+    : '분석 결과, 이번 사업은 외부용역과 비용 차이가 크지 않습니다. 직접수행의 데이터 품질·보안·신속성 등 비용 외 장점을 종합적으로 고려하여 결정하시기 바랍니다.';
+
+  /* 메타 */
+  var meta='';
+  if(_cfg.org) meta+='<div class="rpt-meta-item">&#127968; '+esc(_cfg.org)+'</div>';
+  if(_cfg.name) meta+='<div class="rpt-meta-item">&#128100; '+esc(_cfg.name)+'</div>';
+  meta+='<div class="rpt-meta-item">&#128197; '+today+'</div>';
+  if(S.pName) meta+='<div class="rpt-meta-item">&#128204; '+esc(S.pName)+'</div>';
+  document.getElementById('rptMeta').innerHTML=meta;
+
+  /* 본문 */
+  var h='';
+
+  /* ① 경제성 분석 결과 (핵심) */
+  h+='<div class="rpt-hero">';
+  h+='<div class="rpt-hero-lbl">직접수행으로 절감 가능한 예산</div>';
+  h+='<div class="rpt-hero-amt">'+fmt(sv)+'</div>';
+  h+='<div class="rpt-hero-rate">절감율 '+rt.toFixed(1)+'% &nbsp;|&nbsp; 외부용역 대비</div>';
+  h+='<div class="rpt-hero-row">';
+  h+='<div class="rpt-hero-card"><div class="rpt-hero-card-lbl">외부용역 비용</div><div class="rpt-hero-card-val">'+fmt(baseExt)+'</div></div>';
+  h+='<div class="rpt-hero-card"><div class="rpt-hero-card-lbl">직접수행 비용</div><div class="rpt-hero-card-val">'+fmt(dir)+'</div></div>';
+  h+='</div></div>';
+
+  /* ② 기본 정보 */
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-section-title">&#128203; 기본 정보</div>';
+  h+='<div class="rpt-grid">';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">기관명</div><div class="rpt-item-val">'+esc(_cfg.org||'-')+'</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">담당자</div><div class="rpt-item-val">'+esc(_cfg.name||'-')+'</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">사업명</div><div class="rpt-item-val">'+esc(S.pName||'드론 측량')+'</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">작성일</div><div class="rpt-item-val">'+today+'</div></div>';
+  h+='</div></div>';
+
+  /* ③ 촬영 조건 */
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-section-title">&#128247; 촬영 조건</div>';
+  h+='<div class="rpt-grid">';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">촬영 면적</div><div class="rpt-item-val">'+S.area+'km²</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">지형</div><div class="rpt-item-val">'+esc(S.terrain||'-')+'</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">GSD</div><div class="rpt-item-val">'+S.gsd+'cm</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">작업 일수</div><div class="rpt-item-val">'+S.days+'일</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">투입 드론</div><div class="rpt-item-val">'+droneObj.n+'</div></div>';
+  h+='<div class="rpt-item"><div class="rpt-item-lbl">처리 소프트웨어</div><div class="rpt-item-val">'+swObj.n+'</div></div>';
+  h+='</div></div>';
+
+  /* ④ 외부용역 견적 */
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-section-title">&#128196; 외부용역 견적 (비교 기준)</div>';
+  h+='<table class="rpt-table">';
+  if(S.extQuote>0){
+    h+='<tr><td>표준품셈 추정액 (참고)</td><td>'+fmt(S.ext)+'</td></tr>';
+    h+='<tr><td>실제 견적서 금액 (VAT 포함)</td><td style="color:var(--red)">'+fmt(S.extQuote)+'</td></tr>';
+  } else {
+    h+='<tr><td>산출 기준</td><td>'+(isLarge()?'삼아항업 330km² 계약단가':'표준품셈 9-5-10')+'</td></tr>';
+    h+='<tr><td>외부용역 추정액</td><td style="color:var(--red)">'+fmt(S.ext)+'</td></tr>';
   }
-  if(S.saving === undefined || S.saving === null){
-    toast('먼저 계산을 완료하세요 (STEP 4까지 진행)');
-    return;
+  h+='<tr><td>산출 근거</td><td>'+extLbl+'</td></tr>';
+  h+='</table></div>';
+
+  /* ⑤ 직접수행 비용 내역 */
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-section-title">&#128295; 직접수행 비용 내역</div>';
+  h+='<table class="rpt-table">';
+  /* 인건비 */
+  if(S.bd&&S.bd.length>0){
+    for(var i=0;i<S.bd.length;i++){
+      var b=S.bd[i];
+      h+='<tr><td>'+esc(b.n||b.role)+' ('+b.days+'일×'+fmt(b.daily)+')</td><td>'+fmt(b.days*b.daily)+'</td></tr>';
+    }
   }
-  document.getElementById('shOrg').value = _cfg.org || '';
-  document.getElementById('shName').value = _cfg.name || '';
-  document.getElementById('shProject').value = '';
-  document.getElementById('shNote').value = '';
-  document.getElementById('sheetOverlay').classList.add('open');
-  setTimeout(function(){ document.getElementById('shProject').focus(); }, 200);
+  /* 소모품 */
+  for(var i=0;i<DIRECT.length;i++){
+    var it=DIRECT[i];
+    var val=S.dcosts[it.id]!==undefined?S.dcosts[it.id]:defCost(it.id);
+    if(parseInt(val)>0) h+='<tr><td>'+it.n+' ('+S.days+'일)</td><td>'+fmt((parseInt(val)||0)*S.days)+'</td></tr>';
+  }
+  h+='<tr class="rpt-total"><td>직접수행 합계</td><td>'+fmt(dir)+'</td></tr>';
+  h+='</table>';
+  if(dep>0) h+='<div style="font-size:11px;color:var(--gray500);margin-top:6px">※ 장비 감가상각비 '+fmt(dep)+' ('+S.days+'일 기준) — 예산절감 계산에 미포함, 장비 교체 예산 요청 근거로 활용</div>';
+  h+='</div>';
+
+  /* ⑥ 종합 의견 */
+  h+='<div class="rpt-section">';
+  h+='<div class="rpt-section-title">&#128221; 종합 의견</div>';
+  h+='<div class="rpt-opinion">'+opinion+'</div>';
+  h+='</div>';
+
+  document.getElementById('rptBody').innerHTML=h;
+  document.getElementById('rptOverlay').classList.add('open');
+  document.getElementById('rptOverlay').scrollTop=0;
 }
 
-function closeSaveSheet(){
-  document.getElementById('sheetOverlay').classList.remove('open');
+function closeReport(){
+  document.getElementById('rptOverlay').classList.remove('open');
 }
 
-function doSaveSheet(){
-  var project = document.getElementById('shProject').value.trim();
-  if(!project){ toast('사업명을 입력해주세요'); return; }
-  var btn = document.getElementById('shSave');
-  btn.disabled = true;
-  btn.textContent = '저장 중...';
+/* ===== 보고서 텍스트 복사 ===== */
+function makeReportTxt(){
+  var dir=calcDir(), baseExt=S.extQuote>0?S.extQuote:S.ext;
+  var sv=Math.max(0,baseExt-dir), rt=baseExt>0?(sv/baseExt*100):0;
+  var dep=calcDep();
+  var today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var droneObj=DRONES.filter(function(d){return d.v===S.drone;})[0]||{n:S.drone};
+  var swObj=SWLIST.filter(function(s){return s.v===S.sw;})[0]||{n:S.sw};
+  var ln='================================================';
+  var row=function(lbl,val){return '  '+lbl+' : '+val;};
+  var lines=[
+    ln,
+    '   드론 업무 직접수행 경제성 검토 보고서',
+    '   직접수행 vs 외부용역 · 예산절감 효과 분석',
+    ln,'',
+    '■ 기본 정보',
+    row('기관명',_cfg.org||'-'),
+    row('담당자',_cfg.name||'-'),
+    row('사업명',S.pName||'드론 측량'),
+    row('작성일',today),
+    '',
+    '■ 촬영 조건',
+    row('촬영 면적',S.area+'km²'),
+    row('지형',S.terrain||'-'),
+    row('GSD',S.gsd+'cm'),
+    row('작업 일수',S.days+'일'),
+    row('투입 드론',droneObj.n),
+    row('처리 소프트웨어',swObj.n),
+    '',
+    '■ 외부용역 견적 (비교 기준)'
+  ];
+  if(S.extQuote>0){
+    lines.push(row('표준품셈 추정액 (참고)',fmt(S.ext)));
+    lines.push(row('실제 견적서 금액 (VAT포함)',fmt(S.extQuote)));
+  } else {
+    lines.push(row('산출 기준',isLarge()?'삼아항업 330km² 계약단가':'표준품셈 9-5-10'));
+    lines.push(row('외부용역 추정액',fmt(S.ext)));
+  }
+  lines.push(row('산출 근거',S.extQuote>0?'실제 견적서 (VAT포함)':'표준품셈 기준 추정'));
+  lines.push('');
+  lines.push('■ 직접수행 비용 내역');
+  if(S.bd&&S.bd.length>0){
+    for(var i=0;i<S.bd.length;i++){
+      var b=S.bd[i];
+      lines.push(row(b.n||b.role+' ('+b.days+'일 × '+fmt(b.daily)+')',fmt(b.days*b.daily)));
+    }
+  }
+  for(var i=0;i<DIRECT.length;i++){
+    var it=DIRECT[i], val=S.dcosts[it.id]!==undefined?S.dcosts[it.id]:defCost(it.id);
+    if(parseInt(val)>0) lines.push(row(it.n+' ('+S.days+'일)',fmt((parseInt(val)||0)*S.days)));
+  }
+  lines.push(row('직접수행 합계',fmt(dir)));
+  if(dep>0) lines.push('  ※ 장비 감가상각비 '+fmt(dep)+' ('+S.days+'일) — 예산절감 계산 미포함');
+  lines.push('');
+  lines.push('■ 경제성 분석 결과');
+  lines.push(row('외부용역 비용',fmt(baseExt)));
+  lines.push(row('직접수행 비용',fmt(dir)));
+  lines.push(row('예산 절감액',fmt(sv)));
+  lines.push(row('절감율',rt.toFixed(1)+'%'));
+  lines.push('');
+  lines.push('■ 종합 의견');
+  lines.push(sv>0
+    ?'  분석 결과, 외부용역 대비 직접수행 시 '+fmt(sv)+' ('+rt.toFixed(1)+'%)의 예산 절감이\n  가능합니다. 보유 장비와 인력을 활용한 직접수행이 경제적으로 타당하며,\n  절감 예산은 추가 사업 추진 또는 장비 고도화에 활용할 수 있습니다.'
+    :'  분석 결과, 이번 사업은 외부용역과 비용 차이가 크지 않습니다.\n  직접수행의 데이터 품질·보안·신속성 등 비용 외 장점을 종합적으로\n  고려하여 결정하시기 바랍니다.');
+  lines.push('');
+  lines.push(ln);
+  return lines.join('\n');
+}
+
+function copyReport(){
+  var txt=makeReportTxt();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(function(){toast('보고서 내용이 클립보드에 복사되었습니다');});
+  } else {
+    var ta=document.createElement('textarea');
+    ta.value=txt; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('보고서 내용이 클립보드에 복사되었습니다');
+  }
+}
+
+/* ===== 실적 자동 저장 (Google Sheets 백그라운드) ===== */
+function autoSaveSheet(){
+  if(!_cfg.url) return;
   var payload = {
     key: _cfg.key,
-    org: document.getElementById('shOrg').value.trim(),
-    name: document.getElementById('shName').value.trim(),
-    project: project,
+    org: _cfg.org || '',
+    name: _cfg.name || '',
+    project: S.pName || '드론 측량',
     area: S.area,
     terrain: S.terrain || '',
     gsd: S.gsd || '',
@@ -1866,7 +2119,7 @@ function doSaveSheet(){
     direct: calcDir(),
     saving: S.saving,
     rate: S.rate ? S.rate.toFixed(1) : '0',
-    note: document.getElementById('shNote').value.trim()
+    note: ''
   };
   fetch(_cfg.url, {
     method: 'POST',
@@ -1874,29 +2127,32 @@ function doSaveSheet(){
     body: JSON.stringify(payload),
     redirect: 'follow'
   }).then(function(r){ return r.json(); }).then(function(d){
-    btn.disabled = false;
-    btn.textContent = '📤 저장하기';
-    if(d.success){
-      closeSaveSheet();
-      toast('✅ Google Sheets에 실적이 저장되었습니다');
-      gaEvent('sheet_save', {org: payload.org, saving: S.saving});
-    } else {
-      toast('저장 실패: ' + (d.msg || '알 수 없는 오류'));
-    }
-  }).catch(function(){
-    btn.disabled = false;
-    btn.textContent = '📤 저장하기';
-    toast('저장 실패: 네트워크 오류 — URL을 다시 확인해주세요');
-  });
+    if(d.success){ gaEvent('sheet_save', {org: payload.org, saving: S.saving}); }
+  }).catch(function(){});
 }
 
 document.getElementById('cfgBtn').addEventListener('click', openCfg);
 document.getElementById('cfgCancel').addEventListener('click', closeCfg);
 document.getElementById('cfgSave').addEventListener('click', saveCfg);
 document.getElementById('cfgOverlay').addEventListener('click', function(e){ if(e.target===this) closeCfg(); });
-document.getElementById('shCancel').addEventListener('click', closeSaveSheet);
-document.getElementById('shSave').addEventListener('click', doSaveSheet);
-document.getElementById('sheetOverlay').addEventListener('click', function(e){ if(e.target===this) closeSaveSheet(); });
+
+document.getElementById('rptClose').addEventListener('click', closeReport);
+document.getElementById('rptOverlay').addEventListener('click', function(e){ if(e.target===this) closeReport(); });
+document.getElementById('rptAddHist').addEventListener('click', function(){
+  addHist();
+  closeReport();
+});
+document.getElementById('rptOdt').addEventListener('click', function(){
+  copyReport();
+});
+document.getElementById('rptPdf').addEventListener('click', function(){
+  var el=document.getElementById('exPdf');
+  if(el){ closeReport(); setTimeout(function(){ el.click(); },300); }
+});
+document.getElementById('rptTxt').addEventListener('click', function(){
+  var el=document.getElementById('exTxt');
+  if(el){ closeReport(); setTimeout(function(){ el.click(); },300); }
+});
 
 
 loadCfg();
