@@ -3,15 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="드론절감계산기">
+<meta name="theme-color" content="#1a3a5c">
 <title>드론 업무 예산절감 계산기 v5.0</title>
 <style>
-:root{--blue:#1a3a5c;--blue-mid:#2d5f8a;--blue-light:#e8f2fb;--accent:#0ea5e9;--green:#16a34a;--green-light:#f0fdf4;--red:#dc2626;--gold:#d97706;--gold-light:#fffbeb;--gray50:#f8fafc;--gray100:#f1f5f9;--gray200:#e2e8f0;--gray300:#cbd5e1;--gray500:#64748b;--gray700:#374151;--gray900:#0f172a;--white:#fff;--radius:12px;--shadow:0 2px 16px rgba(26,58,92,.10);--safe-b:env(safe-area-inset-bottom,0px);}
+:root{
+  --blue:#1a3a5c;--blue-mid:#2d5f8a;--blue-light:#e8f2fb;
+  --accent:#0ea5e9;--green:#16a34a;--green-light:#f0fdf4;
+  --red:#dc2626;--gold:#d97706;--gold-light:#fffbeb;
+  --gray50:#f8fafc;--gray100:#f1f5f9;--gray200:#e2e8f0;
+  --gray300:#cbd5e1;--gray500:#64748b;--gray700:#374151;--gray900:#0f172a;
+  --white:#fff;--radius:12px;--shadow:0 2px 16px rgba(26,58,92,.10);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;background:var(--gray50);color:var(--gray900);min-height:100vh;padding:12px 12px calc(80px + var(--safe-b)) 12px;-webkit-font-smoothing:antialiased;}
 .app{max-width:620px;margin:0 auto}
 .hdr{text-align:center;padding:20px 0 16px;border-bottom:1px solid var(--gray200);margin-bottom:20px}
 .hdr-ico{font-size:32px;display:block;margin-bottom:6px}
-.hdr h1{font-size:18px;font-weight:700;color:var(--blue)}
+.hdr h1{font-size:18px;font-weight:700;color:var(--blue);letter-spacing:-.3px}
 .hdr p{font-size:12px;color:var(--gray500);margin-top:3px}
 .prg-wrap{margin-bottom:20px}
 .prg-dots{display:flex;gap:6px;margin-bottom:8px}
@@ -24,11 +37,11 @@ body{font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;background:va
 .ct{font-size:12px;font-weight:700;color:var(--gray500);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:13px;font-weight:600;color:var(--gray700);margin-bottom:5px}
-.field input{width:100%;padding:11px 12px;border:1.5px solid var(--gray200);border-radius:8px;font-size:16px;color:var(--gray900);background:var(--white);outline:none;-webkit-appearance:none;}
+.field input{width:100%;padding:11px 12px;border:1.5px solid var(--gray200);border-radius:8px;font-size:16px;color:var(--gray900);background:var(--white);outline:none;transition:border-color .2s;-webkit-appearance:none;}
 .field input:focus{border-color:var(--accent)}
 .field .hint{font-size:11px;color:var(--gray500);margin-top:4px}
 .unit-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.unit-btn{padding:7px 14px;border:1.5px solid var(--gray200);border-radius:20px;background:var(--white);font-size:13px;font-weight:600;color:var(--gray500);cursor:pointer;min-height:36px;}
+.unit-btn{padding:7px 14px;border:1.5px solid var(--gray200);border-radius:20px;background:var(--white);font-size:13px;font-weight:600;color:var(--gray500);cursor:pointer;transition:all .2s;min-height:36px;}
 .unit-btn.sel{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
 .area-row{display:flex;gap:8px;align-items:center}
 .area-row input{flex:1;padding:11px 12px;border:1.5px solid var(--gray200);border-radius:8px;font-size:18px;font-weight:700;color:var(--gray900);outline:none;-webkit-appearance:none}
@@ -38,6 +51,7 @@ body{font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;background:va
 .gsd-wrap{padding:2px 0}
 .gsd-top{display:flex;gap:10px;align-items:flex-end;margin-bottom:10px}
 .gsd-inp{width:84px;padding:8px;border:1.5px solid var(--accent);border-radius:8px;font-size:22px;font-weight:900;color:var(--accent);text-align:center;outline:none;-webkit-appearance:none;}
+.gsd-inp:focus{border-color:var(--blue)}
 .gsd-cm{font-size:14px;font-weight:700;color:var(--gray500);padding-bottom:10px}
 .gsd-name{flex:1;padding-bottom:6px}
 .gsd-name-main{font-size:15px;font-weight:700;color:var(--blue)}
@@ -49,42 +63,54 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .gsd-q.hi{background:#eff6ff;color:#1d4ed8}.gsd-q.mid{background:var(--green-light);color:var(--green)}.gsd-q.lo{background:#fef9c3;color:#a16207}
 .opt-grid{display:grid;gap:7px}
 .opt-grid.c3{grid-template-columns:1fr 1fr 1fr}
-.opt-btn{padding:10px 6px;border:1.5px solid var(--gray200);border-radius:8px;background:var(--white);font-size:11px;font-weight:600;color:var(--gray700);cursor:pointer;text-align:center;min-height:44px;}
+.opt-btn{padding:10px 6px;border:1.5px solid var(--gray200);border-radius:8px;background:var(--white);font-size:11px;font-weight:600;color:var(--gray700);cursor:pointer;text-align:center;transition:all .2s;line-height:1.4;min-height:44px;}
 .opt-btn.sel{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
 .opt-btn .ob-main{display:block;font-size:12px;font-weight:700}
-.opt-btn .ob-sub{display:block;font-size:9px;color:var(--gray500);margin-top:2px;line-height:1.3}
+.opt-btn .ob-sub{display:block;font-size:9px;color:var(--gray500);margin-top:2px;white-space:normal;line-height:1.3}
+.opt-btn.sel .ob-sub{color:var(--blue-mid)}
 .out-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.out-card{border:1.5px solid var(--gray200);border-radius:10px;padding:12px 8px;cursor:pointer;text-align:center;position:relative;min-height:100px;}
+.out-card{border:1.5px solid var(--gray200);border-radius:10px;padding:12px 8px;cursor:pointer;transition:all .2s;text-align:center;position:relative;min-height:100px;}
 .out-card.sel{border-color:var(--blue);background:var(--blue-light)}
 .out-card input[type=checkbox]{position:absolute;top:7px;right:7px;width:15px;height:15px;accent-color:var(--blue)}
 .out-card .oi{font-size:24px;display:block;margin-bottom:5px}
 .out-card .on{font-size:12px;font-weight:700;color:var(--gray700)}
 .out-card.sel .on{color:var(--blue)}
+.out-card .od{font-size:9px;color:var(--gray500);margin-top:3px;line-height:1.4}
 .eq-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .eq-grid.c3{grid-template-columns:1fr 1fr 1fr}
-.eq-btn{padding:10px 6px;border:1.5px solid var(--gray200);border-radius:8px;background:var(--white);cursor:pointer;text-align:center;min-height:70px;}
+.eq-btn{padding:10px 6px;border:1.5px solid var(--gray200);border-radius:8px;background:var(--white);cursor:pointer;text-align:center;transition:all .2s;min-height:70px;}
 .eq-btn.sel{border-color:var(--blue);background:var(--blue-light)}
 .eq-btn .ei{font-size:18px;display:block;margin-bottom:3px}
 .eq-btn .en{font-size:11px;font-weight:700;color:var(--gray700);display:block}
 .eq-btn.sel .en{color:var(--blue)}
 .eq-btn .es{font-size:9px;color:var(--gray500);display:block;margin-top:2px;line-height:1.3}
-.proc-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--gray100);}
+.tip-wrap{display:inline-block;position:relative;cursor:pointer}
+.tip-ico{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--gray200);color:var(--gray500);font-size:9px;font-weight:700;margin-left:3px;vertical-align:middle;}
+.tip-pop{display:none;position:fixed;bottom:90px;left:12px;right:12px;background:var(--gray900);color:var(--white);font-size:12px;line-height:1.6;padding:14px 16px;border-radius:12px;z-index:9000;white-space:normal;font-weight:400;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+.tip-pop.show{display:block}
+.proc-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--gray100);transition:opacity .2s}
 .proc-row:last-child{border-bottom:none}
 .proc-row.off{opacity:.35}
-.proc-toggle{flex-shrink:0;margin-top:3px;width:40px;height:22px;border-radius:11px;background:var(--gray300);border:none;cursor:pointer;position:relative;-webkit-appearance:none;}
+.proc-toggle{flex-shrink:0;margin-top:3px;width:40px;height:22px;border-radius:11px;background:var(--gray300);border:none;cursor:pointer;position:relative;transition:background .2s;-webkit-appearance:none;}
 .proc-toggle.on{background:var(--blue)}
 .proc-toggle::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--white);transition:left .2s;}
 .proc-toggle.on::after{left:21px}
 .proc-body{flex:1;min-width:0}
-.proc-name{font-size:13px;font-weight:600;color:var(--gray700)}
-.proc-detail{font-size:11px;color:var(--gray500);margin-top:3px;line-height:1.5}
+.proc-name{font-size:13px;font-weight:600;color:var(--gray700);display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.proc-row.off .proc-name{color:var(--gray500)}
+.proc-detail{font-size:11px;color:var(--gray500);margin-top:3px;line-height:1.5;word-break:keep-all}
 .proc-amt{font-size:13px;font-weight:700;color:var(--gray900);white-space:nowrap;padding-top:3px;flex-shrink:0}
+.proc-row.off .proc-amt{color:var(--gray300)}
 .sum-box{background:var(--blue-light);border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;margin-top:12px}
 .sum-box-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;gap:8px}
 .sum-box-row:last-child{margin-bottom:0;font-weight:700;font-size:14px;color:var(--blue);padding-top:8px;border-top:1px solid #bfdbfe}
 .km2-box{background:var(--gray50);border:1px solid var(--gray200);border-radius:8px;padding:10px 14px;margin-bottom:12px}
-.km2-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--gray100)}
-.km2-row:last-child{border-bottom:none;font-weight:700;font-size:13px;color:var(--blue);padding-top:8px}
+.km2-box-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:4px}
+.km2-box-row:last-child{margin-bottom:0;font-weight:700;font-size:14px;color:var(--blue);padding-top:6px;border-top:1px solid var(--gray200)}
+.km2-box-row .kl{color:var(--gray500)}
+.km2-box-row .kv{font-weight:600}
+.badge-large{display:inline-block;background:#fef3c7;border:1px solid #fbbf24;color:#92400e;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;margin-left:6px;vertical-align:middle}
+.badge-small{display:inline-block;background:#dcfce7;border:1px solid #86efac;color:#166534;font-size:11px;font-weight:700;padding:3px 8px;border-radius:12px;margin-left:6px;vertical-align:middle}
 .rt{width:100%;border-collapse:collapse}
 .rt tr{border-bottom:1px solid var(--gray100)}
 .rt tr:last-child{border-bottom:none}
@@ -130,12 +156,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .warn-box{background:var(--gold-light);border:1px solid #fde68a;border-radius:8px;padding:11px 13px;font-size:12px;color:var(--gold);line-height:1.6}
 .save-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--green);color:var(--white);border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;min-height:48px;}
 .ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ex-btn{padding:14px 10px;border:1.5px solid var(--gray200);border-radius:var(--radius);background:var(--white);cursor:pointer;text-align:center;color:var(--gray700);min-height:80px;}
+.ex-btn{padding:14px 10px;border:1.5px solid var(--gray200);border-radius:var(--radius);background:var(--white);cursor:pointer;text-align:center;transition:all .2s;color:var(--gray700);min-height:80px;}
 .ex-btn:active{border-color:var(--accent);background:var(--blue-light);color:var(--blue)}
 .ex-btn .ei2{font-size:26px;display:block;margin-bottom:5px}
 .ex-btn .et{font-size:13px;font-weight:700;display:block}
 .ex-btn .ed{font-size:10px;color:var(--gray500);display:block;margin-top:2px}
-.copy-area{background:var(--gray50);border:1px solid var(--gray200);border-radius:8px;padding:14px;font-size:12px;color:var(--gray700);line-height:1.8;white-space:pre-wrap;margin-top:10px;max-height:300px;overflow-y:auto;font-family:monospace;}
+.copy-area{background:var(--gray50);border:1px solid var(--gray200);border-radius:8px;padding:14px;font-size:12px;color:var(--gray700);line-height:1.8;white-space:pre-wrap;margin-top:10px;max-height:220px;overflow-y:auto;}
 .copy-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--blue);color:var(--white);border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px;min-height:48px;}
 .hi-empty{text-align:center;padding:28px;color:var(--gray500);font-size:13px}
 .hi-item{border:1px solid var(--gray200);border-radius:8px;padding:12px;margin-bottom:8px}
@@ -148,41 +174,52 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .ann-sum{background:var(--green-light);border:1px solid #bbf7d0;border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .ann-lbl{font-size:12px;color:var(--green)}
 .ann-val{font-size:22px;font-weight:900;color:var(--green)}
-.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:5000;padding:16px;overflow-y:auto;}
-.modal-overlay.show{display:flex;align-items:flex-start;justify-content:center;}
-.modal-box{background:var(--white);border-radius:var(--radius);width:100%;max-width:580px;padding:20px;margin:auto;}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.modal-title{font-size:15px;font-weight:700;color:var(--blue)}
-.modal-close{background:none;border:none;font-size:24px;color:var(--gray500);cursor:pointer;min-width:36px;min-height:36px;line-height:1;}
-.modal-pre{white-space:pre-wrap;font-family:monospace;font-size:11px;line-height:1.8;color:var(--gray700);background:var(--gray50);border:1px solid var(--gray200);border-radius:8px;padding:14px;max-height:55vh;overflow-y:auto;}
-.modal-actions{display:flex;gap:8px;margin-top:12px}
-.modal-btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;min-height:44px;}
-.modal-btn.primary{background:var(--blue);color:var(--white);}
-.modal-btn.secondary{background:var(--gray100);color:var(--gray700);}
 .nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:12px 16px calc(12px + var(--safe-b));background:var(--white);border-top:1px solid var(--gray200);box-shadow:0 -4px 16px rgba(0,0,0,.08);z-index:100;}
 .btn-p{padding:12px 20px;border:1.5px solid var(--gray200);border-radius:10px;background:var(--white);font-size:14px;font-weight:600;color:var(--gray500);cursor:pointer;min-height:48px;min-width:90px;}
 .btn-p:disabled{opacity:.35;cursor:not-allowed}
 .btn-n{padding:12px 28px;border:none;border-radius:10px;background:var(--blue);color:var(--white);font-size:14px;font-weight:700;cursor:pointer;min-height:48px;min-width:120px;}
+.btn-n:active{opacity:.85}
+.hidden{display:none!important}
 .toast{position:fixed;bottom:calc(80px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(30px);opacity:0;background:var(--gray900);color:var(--white);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:9999;transition:transform .25s,opacity .25s;white-space:nowrap;pointer-events:none;}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.hidden{display:none!important}
-@media(min-width:480px){body{padding:20px 20px 100px}.card{padding:20px}}
-
-.tip-wrap{display:inline-block;position:relative;cursor:pointer}
-.tip-ico{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--gray200);color:var(--gray500);font-size:9px;font-weight:700;margin-left:3px;vertical-align:middle;}
-.tip-pop{display:none;position:fixed;bottom:90px;left:12px;right:12px;background:var(--gray900);color:var(--white);font-size:12px;line-height:1.6;padding:14px 16px;border-radius:12px;z-index:9000;white-space:normal;font-weight:400;box-shadow:0 8px 32px rgba(0,0,0,.4);}
-.tip-pop.show{display:block}
-.badge-large{display:inline-block;margin-left:8px;padding:2px 8px;background:#fef3c7;color:#d97706;border-radius:10px;font-size:10px;font-weight:700;}
-.badge-small{display:inline-block;margin-left:8px;padding:2px 8px;background:var(--green-light);color:var(--green);border-radius:10px;font-size:10px;font-weight:700;}
-.km2-box-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--gray100);}
-.km2-box-row:last-child{border-bottom:none;font-weight:700;color:var(--blue);font-size:13px;padding-top:8px;}
-.km2-box-row .kl{color:var(--gray500);}
-.km2-box-row .kv{font-weight:600;color:var(--gray900);}
-@media(min-width:480px){.tip-pop{position:absolute;bottom:calc(100% + 8px);left:50%;right:auto;transform:translateX(-50%);width:240px;}}
-
+@media(min-width:480px){
+  body{padding:20px 20px 100px}
+  .card{padding:20px}
+  .hdr h1{font-size:20px}
+  .sv-amt{font-size:40px}
+  .nav{padding:14px 24px calc(14px + var(--safe-b))}
+}
+.plan-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px}
+.plan-tbl{width:100%;border-collapse:collapse;font-size:12px;min-width:460px}
+.plan-tbl th{background:var(--gray100);color:var(--gray500);font-weight:700;padding:8px 6px;text-align:left;border-bottom:2px solid var(--gray200);white-space:nowrap}
+.plan-tbl td{padding:9px 6px;border-bottom:1px solid var(--gray100);vertical-align:middle}
+.plan-tbl tr:last-child td{border-bottom:none}
+.plan-tbl .td-name{font-weight:600;color:var(--gray900)}
+.plan-tbl .td-date{font-size:10px;color:var(--gray500);margin-top:2px}
+.plan-tbl .td-sv{font-weight:700;color:var(--green);white-space:nowrap}
+.plan-tbl .td-rt{color:var(--blue);font-weight:600;white-space:nowrap}
+.plan-tbl .td-del{text-align:center}
+.plan-tbl .tot-row td{background:var(--green-light);font-weight:700;font-size:13px;border-top:2px solid #86efac;border-bottom:none}
+.plan-tbl .tot-row .td-sv{font-size:15px;color:var(--green)}
+.plan-hint{font-size:11px;color:var(--gray500);margin-top:8px;line-height:1.6}
+.ps-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px}
+.ps-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border:1.5px solid var(--gray200);border-radius:20px;background:var(--white);font-size:12px;font-weight:600;color:var(--gray700);cursor:pointer;transition:all .2s;min-height:36px}
+.ps-btn:active{background:var(--blue-light);border-color:var(--blue)}
+.ps-del-ico{font-size:13px;color:var(--gray300);margin-left:2px;line-height:1}
+.ps-add{border-style:dashed;color:var(--blue);border-color:var(--blue);background:var(--blue-light)}
+.ps-inp-row{display:flex;gap:6px;align-items:center;margin-top:10px}
+.ps-inp{flex:1;padding:10px 12px;border:1.5px solid var(--accent);border-radius:8px;font-size:15px;outline:none;-webkit-appearance:none}
+.ps-ok{padding:10px 16px;background:var(--blue);color:var(--white);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px}
+.ps-cancel{padding:10px 12px;background:var(--white);color:var(--gray500);border:1.5px solid var(--gray200);border-radius:8px;font-size:13px;cursor:pointer;min-height:44px}
+.share-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;background:var(--blue-mid);color:var(--white);border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;min-height:48px}
+.share-btn:active{opacity:.85}
+.url-banner{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px 14px;font-size:12px;color:#9a3412;margin-bottom:12px;line-height:1.6}
 </style>
 </head>
 <body>
+<div id="pwaBar" style="display:none;background:var(--blue);color:#fff;padding:10px 14px;font-size:12px;font-weight:600;text-align:center;cursor:pointer;position:fixed;top:0;left:0;right:0;z-index:200">
+  &#128241; 홈 화면에 추가하면 앱처럼 사용 가능합니다 &rarr;
+</div>
 <div class="app" id="mainApp">
   <div class="hdr">
     <span class="hdr-ico">&#128641;</span>
@@ -202,21 +239,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
     <button class="btn-n" id="bNext" onclick="go(1)">다음 &#8594;</button>
   </div>
 </div>
-<div class="modal-overlay" id="previewModal">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <span class="modal-title">&#128203; 보고서 미리보기</span>
-      <button class="modal-close" id="modalClose">&times;</button>
-    </div>
-    <pre class="modal-pre" id="modalPre"></pre>
-    <div class="modal-actions">
-      <button class="modal-btn primary" id="modalCopy">&#128203; 클립보드 복사</button>
-      <button class="modal-btn secondary" id="modalClose2">닫기</button>
-    </div>
-  </div>
-</div>
 <div class="toast" id="toast"></div>
-
 <script>
 /* ===== 2026 표준품셈 노임단가 ===== */
 var W={t1:326774,t2:289265,t3:251596,t4:215609,f1:200786,f2:300967,f3:236885,f4:229483,f5:242957,inf:215609,lb:172068};
@@ -255,7 +278,7 @@ var ITEMS=[
    tip:'왜곡 보정된 정사영상(Orthophoto) 및 수치표면모델(DSM) 제작. 항공삼각측량 결과를 이용해 자동 생성.',
    detail:'표준품셈 9-5-10 기준 | 고급 1.3일 + 중급 1.3일 | 내업 작업 | GSD·면적계수 적용',
    p:[['t2',1.3],['t3',1.3]]},
-  {id:'vec',  on:true,  n:'도면 디지털화 (벡터화)',
+  {id:'vec',  on:false, n:'도면 디지털화 (벡터화)',
    tip:'정사영상을 기반으로 도로·건물·경계 등 지형지물을 선·면으로 디지털 도면화(벡터화). CAD·GIS 활용 가능.',
    detail:'표준품셈 9-5-4 수동입력(벡터화) 적용 | 고급 0.49일 + 중급기능사(지도) 4.88일 + 정보처리기사 0.49일',
    p:[['t2',.49],['f5',4.88],['inf',.49]]},
@@ -331,8 +354,9 @@ var S = {
   outputs:{map2d:true, mesh3d:false, lidar:false},
   drone:'m400', sw:'djiterra',
   depCosts:{drone:88000, lidar:29000, ws:8000},
-  ext:0, bd:[], dcosts:{}, days:1, saving:0, rate:0,
-  hist:(function(){try{return JSON.parse(localStorage.getItem('dh')||'[]');}catch(e){return [];}})()
+  ext:0, extQuote:0, bd:[], dcosts:{}, days:1, saving:0, rate:0,
+  hist:(function(){try{return JSON.parse(localStorage.getItem('dh')||'[]');}catch(e){return [];}})(),
+  presets:(function(){try{return JSON.parse(localStorage.getItem('dp')||'[]');}catch(e){return [];}})()
 };
 
 /* ===== 유틸 ===== */
@@ -341,7 +365,103 @@ function qs(id){return document.getElementById(id);}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function toast(m){var t=qs('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2500);}
 function saveLs(){try{localStorage.setItem('dh',JSON.stringify(S.hist));}catch(e){}}
+function savePs(){try{localStorage.setItem('dp',JSON.stringify(S.presets));}catch(e){}}
 function toKm2(v,u){return parseFloat(v)*(UNIT_TO_KM2[u]||1);}
+
+/* ===== 프리셋 ===== */
+var _psEdit=false;
+
+function loadPreset(i){
+  var p=S.presets[i];
+  if(!p) return;
+  S.drone=p.drone; S.sw=p.sw; S.gsd=p.gsd; S.terrain=p.tr;
+  S.area=p.area||S.area; S.aUnit=p.aUnit||S.aUnit;
+  S.outputs={map2d:!!p.outputs.map2d, mesh3d:!!p.outputs.mesh3d, lidar:!!p.outputs.lidar};
+  _psEdit=false;
+  render();
+  toast('프리셋 적용: '+p.nm);
+}
+
+function delPreset(i){
+  S.presets.splice(i,1);
+  savePs(); render();
+  toast('프리셋 삭제됨');
+}
+
+function openPsSave(){
+  _psEdit=true;
+  render();
+  var el=qs('psNameInp');
+  if(el){el.focus();el.value=S.pName||'';}
+}
+
+function confirmPsSave(){
+  var el=qs('psNameInp'); if(!el) return;
+  var nm=el.value.trim()||('프리셋 '+(S.presets.length+1));
+  if(S.presets.length>=5){S.presets.pop();}
+  S.presets.unshift({
+    nm:nm, drone:S.drone, sw:S.sw, gsd:S.gsd, tr:S.terrain,
+    area:S.area, aUnit:S.aUnit,
+    outputs:{map2d:!!S.outputs.map2d, mesh3d:!!S.outputs.mesh3d, lidar:!!S.outputs.lidar}
+  });
+  savePs(); _psEdit=false; render();
+  toast('프리셋 저장: '+nm);
+}
+
+function cancelPsSave(){_psEdit=false; render();}
+
+/* ===== 공유 URL ===== */
+var _fromUrl=false;
+
+function loadFromUrl(){
+  if(!location.search) return;
+  var p=new URLSearchParams(location.search);
+  if(!p.has('ar')) return;
+  _fromUrl=true;
+  var nm=p.get('nm'); if(nm) S.pName=decodeURIComponent(nm);
+  var ar=parseFloat(p.get('ar')); if(ar>0) S.area=ar;
+  var au=p.get('au'); if(au&&UNIT_TO_KM2[au]) S.aUnit=au;
+  var gs=parseFloat(p.get('gs')); if(gs>0) S.gsd=gs;
+  var ti=parseInt(p.get('tr')||'0');
+  if(ti>=0&&ti<TERRAINS.length) S.terrain=TERRAINS[ti];
+  var o=p.get('o')||'100';
+  S.outputs={map2d:o[0]==='1', mesh3d:o.length>1&&o[1]==='1', lidar:o.length>2&&o[2]==='1'};
+  var dr=p.get('dr'); if(dr) S.drone=dr;
+  var sw=p.get('sw'); if(sw) S.sw=sw;
+  var dy=parseInt(p.get('dy')); if(dy>0) S.days=dy;
+}
+
+function makeShareUrl(){
+  var base=location.href.split('?')[0];
+  var parts=[];
+  if(S.pName) parts.push('nm='+encodeURIComponent(S.pName));
+  parts.push('ar='+S.area);
+  parts.push('au='+S.aUnit);
+  parts.push('gs='+S.gsd);
+  var ti=TERRAINS.indexOf(S.terrain);
+  parts.push('tr='+(ti>=0?ti:0));
+  parts.push('o='+(S.outputs.map2d?'1':'0')+(S.outputs.mesh3d?'1':'0')+(S.outputs.lidar?'1':'0'));
+  parts.push('dr='+S.drone);
+  parts.push('sw='+S.sw);
+  parts.push('dy='+S.days);
+  return base+'?'+parts.join('&');
+}
+
+function doShareUrl(){
+  var url=makeShareUrl();
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      toast('공유 URL이 복사되었습니다 — 카카오톡에 붙여넣기 하세요');
+    });
+  } else {
+    var el=document.createElement('input');
+    el.value=url; el.style.position='fixed'; el.style.opacity='0';
+    document.body.appendChild(el);
+    el.select(); document.execCommand('copy');
+    document.body.removeChild(el);
+    toast('공유 URL이 복사되었습니다');
+  }
+}
 function dispArea(u){
   var k=S.area;
   if(u==='km2') return k;
@@ -445,7 +565,7 @@ function calcExt(){
     tL+=mL;
   }
   if(S.outputs.lidar){
-    var lL=450000*area*tC;
+    var lL=495000*area*tC;
     bd.push({n:'LiDAR \uc2a4\uce94 \ubc0f \ub370\uc774\ud130 \ucc98\ub9ac',a:Math.round(lL),sub:false});
     tL+=lL;
   }
@@ -512,6 +632,44 @@ document.addEventListener('click',function(e){
 /* ===== STEP 1 렌더 ===== */
 function r1(){
   var h='';
+
+  /* ===== \uacf5\uc720 \ub9c1\ud06c \ubc30\ub108 (URL \ud30c\ub77c\ubbf8\ud130\ub85c \uc9c4\uc785 \uc2dc) ===== */
+  if(_fromUrl){
+    h+='<div class="url-banner">';
+    h+='&#128279; \uacf5\uc720 \ub9c1\ud06c\ub85c \ubd88\ub7ec\uc628 \uc870\uac74\uc785\ub2c8\ub2e4 \u2014 \uc218\uc815 \ud6c4 \ub2e4\uc2dc \uacf5\uc720\ud558\uac70\ub098 STEP 5\uc5d0\uc11c \uacb0\uacfc\ub97c \ud655\uc778\ud558\uc138\uc694.';
+    h+='</div>';
+  }
+
+  /* ===== \ud504\ub9ac\uc14b \uce74\ub4dc ===== */
+  h+='<div class="card">';
+  h+='<div class="ct">&#11088; \uc990\uaca8\ucc3e\uae30 (\ud504\ub9ac\uc14b)</div>';
+  h+='<div class="ps-wrap">';
+  for(var pi=0;pi<S.presets.length;pi++){
+    var pp=S.presets[pi];
+    h+='<button class="ps-btn" data-pli="'+pi+'">';
+    h+='&#11088; '+esc(pp.nm);
+    h+='<span class="ps-del-ico" data-pdi="'+pi+'">&times;</span>';
+    h+='</button>';
+  }
+  if(!_psEdit){
+    h+='<button class="ps-btn ps-add" id="psAddBtn">+ \ud604\uc7ac \uc870\uac74 \uc800\uc7a5</button>';
+  }
+  h+='</div>';
+  if(S.presets.length===0&&!_psEdit){
+    h+='<div style="font-size:11px;color:var(--gray500);margin-top:4px">';
+    h+='\uc790\uc8fc \uc4f0\ub294 \ub4dc\ub860\u00b7GSD\u00b7\uc9c0\ud615 \uc870\uac74\uc744 \uc800\uc7a5\ud574\ub450\uba74 \ub2e4\uc74c\uc5d0 \ud55c \ubc88\uc5d0 \ubd88\ub7ec\uc62c \uc218 \uc788\uc2b5\ub2c8\ub2e4. (\ucd5c\ub300 5\uac1c)';
+    h+='</div>';
+  }
+  if(_psEdit){
+    h+='<div class="ps-inp-row">';
+    h+='<input class="ps-inp" id="psNameInp" type="text" placeholder="\ud504\ub9ac\uc14b \uc774\ub984 (\uc608: \uc591\uc8fc\uc2dc \ud45c\uc900)" maxlength="20">';
+    h+='<button class="ps-ok" id="psOkBtn">\uc800\uc7a5</button>';
+    h+='<button class="ps-cancel" id="psCancelBtn">\ucde8\uc18c</button>';
+    h+='</div>';
+    h+='<div style="font-size:11px;color:var(--gray500);margin-top:6px">\ud604\uc7ac \ub4dc\ub860\u00b7\uc18c\ud504\ud2b8\uc6e8\uc5b4\u00b7GSD\u00b7\uc9c0\ud615\u00b7\uacb0\uacfc\ubb3c \uc124\uc815\uc744 \uc800\uc7a5\ud569\ub2c8\ub2e4</div>';
+  }
+  h+='</div>';
+
   h+='<div class="card"><div class="ct">\uae30\ubcf8 \uc815\ubcf4</div>';
   h+='<div class="field"><label>\uc0ac\uc5c5\uba85 (\ubcf4\uace0\uc11c\uc5d0 \ud45c\uc2dc)</label>';
   h+='<input id="fn" type="text" placeholder="\uc608: \uc0b0\ud558\ub9ac \ub4dc\ub860\uce21\ub7c9" value="'+esc(S.pName)+'">';
@@ -692,6 +850,36 @@ function r2(){
   }
 
   h+='</div>';
+
+  /* ===== \uc5c5\uccb4 \uacac\uc801\uc11c \uc9c1\uc811 \uc785\ub825 \uce74\ub4dc ===== */
+  h+='<div class="card">';
+  h+='<div class="ct">&#128196; \uc2e4\uc81c \uc5c5\uccb4 \uacac\uc801 \uc785\ub825 (\uc120\ud0dd)</div>';
+  h+='<div class="info-box" style="margin-bottom:10px">';
+  h+='\uc2e4\uc81c \uc5c5\uccb4\uc5d0\uac8c \ubc1b\uc740 \uacac\uc801\uc11c \uae08\uc561\uc744 \uc785\ub825\ud558\uba74 ';
+  h+='STEP 4\uc5d0\uc11c <strong>\ud45c\uc900\ud488\uc148 vs \uc2e4\uc81c\uacac\uc801 vs \uc9c1\uc811\uc218\ud589</strong> 3\uc790 \ube44\uad50\ub97c \ubcf4\uc5ec\uc90d\ub2c8\ub2e4.<br>';
+  h+='\ube44\uc6cc\ub450\uba74 \ud45c\uc900\ud488\uc148 \uae30\uc900\uc73c\ub85c\ub9cc \ube44\uad50\ud569\ub2c8\ub2e4.</div>';
+  h+='<div class="ci">';
+  h+='<span class="ci-ico">&#128196;</span>';
+  h+='<div class="ci-info">';
+  h+='<div class="cn">\uacac\uc801\uc11c \uae08\uc561 (VAT \ud3ec\ud568)</div>';
+  h+='<div class="cd">\ub099\uc2e4 \uc2dc \uc2e4\uc81c \ubc1b\uc740 \uae08\uc561 \uc785\ub825 &mdash; \uc5c5\uccb4\uac00 \uc800\ub834\ud558\uba74 \uadf8 \uae08\uc561 \uae30\uc900 \uc808\uac10 \uc0b0\ucd9c</div>';
+  h+='</div>';
+  h+='<div class="ci-inp-w">';
+  h+='<input class="ci-inp" id="extQInp" type="number" min="0" step="10000" placeholder="0" value="'+(S.extQuote>0?S.extQuote:'')+'" style="width:130px">';
+  h+='<span class="ci-unit">\uc6d0</span>';
+  h+='</div></div>';
+  if(S.extQuote>0){
+    var qDiff=S.ext-S.extQuote, qRate=S.ext>0?(qDiff/S.ext*100):0;
+    h+='<div class="sum-box" style="margin-top:10px">';
+    h+='<div class="sum-box-row"><span>\ud45c\uc900\ud488\uc148 \ucd94\uc815\uc561 (\ucc38\uace0)</span><span>'+fmt(S.ext)+'</span></div>';
+    h+='<div class="sum-box-row"><span style="color:var(--red);font-weight:600">\uc5c5\uccb4 \uc2e4\uc81c \uacac\uc801 (VAT\ud3ec\ud568)</span>';
+    h+='<span style="color:var(--red);font-weight:700">'+fmt(S.extQuote)+'</span></div>';
+    h+='<div class="sum-box-row" style="font-size:12px"><span>\ub099\uc2e4\ub960 (\ud45c\uc900\ud488\uc148 \ub300\ube44)</span>';
+    h+='<span style="color:var(--green)">'+qRate.toFixed(1)+'%</span></div>';
+    h+='</div>';
+  }
+  h+='</div>';
+
   h+='<div class="warn-box">&#9888;&#65039; \uc678\ubd80 \uc5c5\uccb4 \ubc1c\uc8fc \uc2dc \ud544\uc694\ud55c \uc608\uc0b0 \ucd94\uc815\uc561. \uc2e4\uc81c \ub099\uc2e4 \uc2dc 80~90% \uc801\uc6a9.</div>';
   return h;
 }
@@ -753,19 +941,27 @@ function r3(){
 
 /* ===== STEP 4 렌더 ===== */
 function r4(){
-  var dir=calcDir(), sv=Math.max(0,S.ext-dir), rt=S.ext>0?(sv/S.ext*100):0;
+  var dir=calcDir();
+  var baseExt=S.extQuote>0?S.extQuote:S.ext;
+  var sv=Math.max(0,baseExt-dir), rt=baseExt>0?(sv/baseExt*100):0;
   S.saving=sv; S.rate=rt;
+  var extLbl=S.extQuote>0?'\uc2e4\uc81c \uacac\uc801\uc11c':'\uc678\ubd80 \uc6a9\uc5ed \uacac\uc801';
   var h='<div class="sv-hero">';
   h+='<div class="sv-lbl">\uc9c1\uc811 \uc218\ud589\uc73c\ub85c \uc544\ub08c \uc608\uc0b0</div>';
   h+='<div class="sv-amt">'+fmt(sv)+'</div>';
   h+='<div class="sv-rate">\uc808\uac10\ub960 '+rt.toFixed(1)+'%</div>';
   h+='<div class="sv-row">';
-  h+='<div class="sv-card"><div class="sc-l">\uc678\ubd80 \uc6a9\uc5ed \uacac\uc801</div><div class="sc-v">'+fmt(S.ext)+'</div></div>';
+  h+='<div class="sv-card"><div class="sc-l">'+extLbl+'</div><div class="sc-v">'+fmt(baseExt)+'</div></div>';
   h+='<div class="sv-card"><div class="sc-l">\uc9c1\uc811 \uc218\ud589 \ube44\uc6a9</div><div class="sc-v">'+fmt(dir)+'</div></div>';
   h+='</div></div>';
   h+='<div class="card"><div class="ct">\ube44\uc6a9 \uc0c1\uc138</div>';
   h+='<table class="rt">';
-  h+='<tr><td>\uc678\ubd80 \uc6a9\uc5ed \uacac\uc801 ('+(isLarge()?'\uc0bc\uc544\ud56d\uc5c5 \uae30\uc900\ub2e8\uac00':'\ud45c\uc900\ud488\uc148')+' \uae30\uc900)</td><td style="color:var(--red)">'+fmt(S.ext)+'</td></tr>';
+  if(S.extQuote>0){
+    h+='<tr><td>\ud45c\uc900\ud488\uc148 \ucd94\uc815\uc561 (\ucc38\uace0)</td><td style="color:var(--gray500)">'+fmt(S.ext)+'</td></tr>';
+    h+='<tr><td>\uc5c5\uccb4 \uc2e4\uc81c \uacac\uc801 (VAT\ud3ec\ud568)</td><td style="color:var(--red);font-weight:700">'+fmt(S.extQuote)+'</td></tr>';
+  } else {
+    h+='<tr><td>\uc678\ubd80 \uc6a9\uc5ed \uacac\uc801 ('+(isLarge()?'\uc0bc\uc544\ud56d\uc5c5 \uae30\uc900\ub2e8\uac00':'\ud45c\uc900\ud488\uc148')+' \uae30\uc900)</td><td style="color:var(--red)">'+fmt(S.ext)+'</td></tr>';
+  }
   h+='<tr><td>\uc9c1\uc811 \uc218\ud589 \uc2e4\uc18c\uc694 \ube44\uc6a9 ('+S.days+'\uc77c)</td><td>'+fmt(dir)+'</td></tr>';
   h+='<tr class="tot"><td>&#128176; \uc608\uc0b0 \uc808\uac10\uc561</td><td style="color:var(--green);font-size:18px">'+fmt(sv)+'</td></tr>';
   h+='</table></div>';
@@ -784,27 +980,47 @@ function r5(){
   var ann=0; for(var i=0;i<S.hist.length;i++) ann+=S.hist[i].sv;
   var h='<div class="card"><div class="ct">\uc5f0\uac04 \ub204\uc801 \uc808\uac10 \uc2e4\uc801</div>';
   if(S.hist.length===0){
-    h+='<div class="hi-empty">\uc800\uc7a5\ub41c \uc2e4\uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4<br>\uc544\ub798 \ubc84\ud2bc\uc73c\ub85c \ud604\uc7ac \uacb0\uacfc\ub97c \uc800\uc7a5\ud558\uc138\uc694</div>';
+    h+='<div class="hi-empty">\uc800\uc7a5\ub41c \uc2e4\uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4<br>STEP 4 \uacb0\uacfc \ud655\uc778 \ud6c4 \uc774 \ubc84\ud2bc\uc73c\ub85c \uc800\uc7a5\ud558\uc138\uc694</div>';
   } else {
-    h+='<div class="ann-sum"><span class="ann-lbl">\uc62c\ud574 \ucd1d \uc808\uac10\uc561</span><span class="ann-val">'+fmt(ann)+'</span></div>';
+    h+='<div class="ann-sum"><span class="ann-lbl">\uc62c\ud574 \ucd1d \uc808\uac10\uc561 ('+S.hist.length+'\uac74)</span><span class="ann-val">'+fmt(ann)+'</span></div>';
+    h+='<div class="plan-wrap"><table class="plan-tbl">';
+    h+='<thead><tr>';
+    h+='<th>\uc0ac\uc5c5\uba85</th><th>\uba74\uc801</th><th>GSD</th><th>\uc9c0\ud615</th><th>\uc808\uac10\uc561</th><th>\uc808\uac10\ub960</th><th></th>';
+    h+='</tr></thead><tbody>';
     for(var i=0;i<S.hist.length;i++){
       var hh=S.hist[i];
-      h+='<div class="hi-item"><div class="hi-top"><div>';
-      h+='<div class="hi-name">'+(hh.nm||'\ubb34\uc81c \uc0ac\uc5c5')+'</div>';
-      h+='<div class="hi-date">'+hh.dt+' &middot; '+hh.ar+'km\u00B2</div>';
-      h+='</div><button class="hi-del" data-di="'+i+'">&times;</button></div>';
-      h+='<div class="hi-sv">'+fmt(hh.sv)+'</div>';
-      h+='<div class="hi-meta"><span>\uc678\ubd80\uc6a9\uc5ed '+fmt(hh.ext)+'</span><span>\uc9c1\uc811\uc218\ud589 '+fmt(hh.dir)+'</span><span>\uc808\uac10\ub960 '+hh.rt.toFixed(1)+'%</span></div>';
-      h+='</div>';
+      h+='<tr>';
+      h+='<td><div class="td-name">'+(hh.nm||'\ubb34\uc81c \uc0ac\uc5c5')+'</div>';
+      h+='<div class="td-date">'+hh.dt+'</div></td>';
+      h+='<td>'+hh.ar+'km&#178;</td>';
+      h+='<td>'+(hh.gsd||'-')+'cm</td>';
+      h+='<td>'+(hh.tr||'-')+'</td>';
+      h+='<td class="td-sv">'+fmt(hh.sv)+'</td>';
+      h+='<td class="td-rt">'+hh.rt.toFixed(1)+'%</td>';
+      h+='<td class="td-del"><button class="hi-del" data-di="'+i+'">&times;</button></td>';
+      h+='</tr>';
     }
+    h+='<tr class="tot-row">';
+    h+='<td colspan="4">&#128176; \ud569\uacc4 ('+S.hist.length+'\uac74)</td>';
+    h+='<td class="td-sv">'+fmt(ann)+'</td>';
+    var annExt=0; for(var i=0;i<S.hist.length;i++) annExt+=S.hist[i].ext;
+    h+='<td class="td-rt">'+(annExt>0?(ann/annExt*100).toFixed(1)+'%':'-')+'</td>';
+    h+='<td></td></tr>';
+    h+='</tbody></table></div>';
+    h+='<div class="plan-hint">&#128204; \ud45c\ub97c \uc606\uc73c\ub85c \ubc00\uba74 \uc804\uccb4 \ud56d\ubaa9\uc744 \ubcfc \uc218 \uc788\uc2b5\ub2c8\ub2e4 &middot; GSD\u00b7\uc9c0\ud615\uc740 \uc800\uc7a5 \uc2dc\uc810\ubd80\ud130 \uae30\ub85d\ub429\ub2c8\ub2e4</div>';
   }
-  h+='<button class="save-btn" id="savHBtn">&#10010; \ud604\uc7ac \uacb0\uacfc \uc2e4\uc801\uc5d0 \uc800\uc7a5</button></div>';
+  h+='<button class="save-btn" id="savHBtn">&#10010; \ud604\uc7ac \uacb0\uacfc \ubaa9\ub85d\uc5d0 \ucd94\uac00</button></div>';
   h+='<div class="card"><div class="ct">\ubcf4\uace0\uc11c \ub0b4\ubcf4\ub0b4\uae30</div><div class="ex-grid">';
   h+='<button class="ex-btn" id="exTxt"><span class="ei2">&#128203;</span><span class="et">\ud55c\uae00 \ubcf5\uc0ac</span><span class="ed">\uacb0\uc7ac\ubb38\uc11c\uc5d0 \ubd99\uc5ec\ub123\uae30</span></button>';
   h+='<button class="ex-btn" id="exCsv"><span class="ei2">&#128202;</span><span class="et">\uc5d1\uc140 \uc800\uc7a5</span><span class="ed">CSV \uc0b0\ucd9c\ub0b4\uc5ed\uc11c</span></button>';
   h+='<button class="ex-btn" id="exPdf"><span class="ei2">&#128196;</span><span class="et">PDF \uc800\uc7a5</span><span class="ed">\uacf5\uc2dd \ucca8\ubd80\ud30c\uc77c\uc6a9</span></button>';
   h+='<button class="ex-btn" id="exImg"><span class="ei2">&#128444;&#65039;</span><span class="et">\uc774\ubbf8\uc9c0 \uc800\uc7a5</span><span class="ed">PNG \uacf5\uc720\uc6a9</span></button>';
-  h+='</div></div>';
+  h+='</div>';
+  h+='<button class="share-btn" id="exUrl">';
+  h+='&#128279; \uc870\uac74 \uacf5\uc720 URL \ubcf5\uc0ac &nbsp;';
+  h+='<span style="font-size:11px;opacity:.8">\uce74\uce74\uc624\ud1a1\u00b7\uc2ac\ub799\uc73c\ub85c \uc804\uc1a1 \u2014 \uc0c1\ub300\ubc29\uc774 \uac19\uc740 \uc870\uac74 \ubc14\ub85c \ud655\uc778</span>';
+  h+='</button>';
+  h+='</div>';
   h+='<div id="tOut" class="hidden"><div class="copy-area" id="tTxt"></div><button class="copy-btn" id="cpyBtn">&#128203; \ud074\ub9bd\ubcf4\ub4dc\uc5d0 \ubcf5\uc0ac</button></div>';
   return h;
 }
@@ -812,7 +1028,7 @@ function r5(){
 /* ===== GSD 설정 ===== */
 function setGsd(v){
   S.gsd=v;
-  var gi=qs('gInp'); if(gi) gi.value=v;
+  var gi=qs('gInp'); if(gi&&document.activeElement!==gi) gi.value=v;
   var gr=qs('gRng'); if(gr) gr.value=v;
   var gl=qs('gLbl'); if(gl) gl.textContent=gsdLbl(v);
   var gs=qs('gSub'); if(gs) gs.textContent=gsdSub(v);
@@ -846,6 +1062,27 @@ function bindAll(){
 }
 
 function bindStep1(){
+  /* ── 프리셋 버튼 ── */
+  var plbs=document.querySelectorAll('[data-pli]');
+  for(var pi=0;pi<plbs.length;pi++){
+    (function(btn){
+      btn.onclick=function(e){
+        if(e.target.dataset.pdi!==undefined){
+          e.stopPropagation();
+          delPreset(parseInt(e.target.dataset.pdi));
+        } else {
+          loadPreset(parseInt(btn.dataset.pli));
+        }
+      };
+    })(plbs[pi]);
+  }
+  var psAdd=qs('psAddBtn');    if(psAdd)    psAdd.onclick=openPsSave;
+  var psOk=qs('psOkBtn');      if(psOk)     psOk.onclick=confirmPsSave;
+  var psCancel=qs('psCancelBtn'); if(psCancel) psCancel.onclick=cancelPsSave;
+  var psInp=qs('psNameInp');
+  if(psInp) psInp.onkeydown=function(e){if(e.key==='Enter') confirmPsSave();};
+
+  /* ── 기존 바인딩 ── */
   var fn=qs('fn');
   if(fn) fn.oninput=function(e){S.pName=e.target.value;};
 
@@ -929,6 +1166,19 @@ function bindStep1(){
 }
 
 function bindStep2(){
+  var eq=document.getElementById('extQInp');
+  if(eq) eq.oninput=function(e){
+    S.extQuote=parseInt(e.target.value)||0;
+    var sb=document.querySelector('#sContent .sum-box');
+    if(sb){
+      var qDiff=S.ext-S.extQuote, qRate=S.ext>0?(qDiff/S.ext*100):0;
+      if(S.extQuote>0){
+        sb.innerHTML='<div class="sum-box-row"><span>표준품셈 추정액 (참고)</span><span>'+fmt(S.ext)+'</span></div>'
+          +'<div class="sum-box-row"><span style="color:var(--red);font-weight:600">업체 실제 견적 (VAT포함)</span><span style="color:var(--red);font-weight:700">'+fmt(S.extQuote)+'</span></div>'
+          +'<div class="sum-box-row" style="font-size:12px"><span>낙실률 (표준품셈 대비)</span><span style="color:var(--green)">'+qRate.toFixed(1)+'%</span></div>';
+      }
+    }
+  };
   var pbs=document.querySelectorAll('[data-pid]');
   for(var i=0;i<pbs.length;i++){
     (function(btn){
@@ -993,6 +1243,7 @@ function bindStep5(){
   var ec=qs('exCsv');   if(ec) ec.onclick=doCsv;
   var ep=qs('exPdf');   if(ep) ep.onclick=doPdf;
   var ei=qs('exImg');   if(ei) ei.onclick=function(){toast('\ub2e4\uc74c \ubc84\uc804 \uc9c0\uc6d0 \uc608\uc815');};
+  var eu=qs('exUrl');   if(eu) eu.onclick=doShareUrl;
   var cp=qs('cpyBtn');  if(cp) cp.onclick=doCopy;
 
   var dibs=document.querySelectorAll('[data-di]');
@@ -1022,7 +1273,8 @@ function addHist(){
   S.hist.unshift({
     nm:S.pName||'\ubb34\uc81c \uc0ac\uc5c5',
     dt:new Date().toLocaleDateString('ko-KR'),
-    ar:S.area, ext:S.ext, dir:dir, sv:S.saving, rt:S.rate
+    ar:S.area, gsd:S.gsd, tr:S.terrain,
+    ext:S.ext, dir:dir, sv:S.saving, rt:S.rate
   });
   saveLs(); toast('\uc2e4\uc801\uc774 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4'); render();
 }
@@ -1050,6 +1302,156 @@ function makeTxt(){
   ].join('\n');
 }
 
+function makePdfHtml(){
+  var dir=calcDir();
+  var baseExt=S.extQuote>0?S.extQuote:S.ext;
+  var d=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var modeStr=isLarge()?'삼아항업 330km² 계약(2025) 기준단가':'표준품셈 9-5-10';
+  var gC=gsdCoef(S.gsd), tC=(TERRAIN_INFO[S.terrain]||{coef:1.0}).coef;
+
+  /* ── CSS ── */
+  var css='';
+  css+='*{box-sizing:border-box;margin:0;padding:0}';
+  css+='body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:11pt;';
+  css+='color:#1a1a1a;padding:15mm;max-width:210mm;margin:0 auto;line-height:1.65}';
+  css+='@media print{body{padding:10mm}.no-print{display:none!important}';
+  css+='@page{size:A4;margin:15mm}tr{page-break-inside:avoid}}';
+  css+='h1{font-size:15pt;font-weight:700;text-align:center;color:#1a3a5c;margin-bottom:4px}';
+  css+='.sub{text-align:center;font-size:9.5pt;color:#555;padding-bottom:12px;';
+  css+='border-bottom:2px solid #1a3a5c;margin-bottom:16px}';
+  css+='.meta{border:1px solid #ddd;border-radius:4px;padding:10px 14px;';
+  css+='margin-bottom:14px;font-size:10pt}';
+  css+='.mrow{display:flex;gap:8px;margin-bottom:3px}';
+  css+='.ml{color:#666;min-width:72px;flex-shrink:0}';
+  css+='.mv{font-weight:600;color:#0f172a}';
+  css+='.th{font-size:10.5pt;font-weight:700;color:#1a3a5c;margin:14px 0 5px;';
+  css+='border-left:3px solid #1a3a5c;padding-left:8px}';
+  css+='table{width:100%;border-collapse:collapse;margin-bottom:4px;font-size:10pt}';
+  css+='th{background:#1a3a5c;color:#fff;padding:8px 10px;text-align:left;';
+  css+='font-weight:600;font-size:9.5pt}';
+  css+='td{padding:7px 10px;border-bottom:1px solid #e2e8f0;vertical-align:middle}';
+  css+='.tr{text-align:right;font-variant-numeric:tabular-nums}';
+  css+='.sv-row td{font-weight:700;background:#f0fdf4;color:#166534}';
+  css+='.ref-row td{color:#888;font-size:9pt;background:#f8fafc}';
+  css+='.sub-row td{color:#555;padding-left:22px}';
+  css+='.note{font-size:9pt;color:#555;margin:6px 0 14px;line-height:1.7;';
+  css+='padding:8px 12px;background:#f8fafc;border-radius:4px}';
+  css+='.footer{margin-top:22px;padding-top:10px;border-top:2px solid #1a3a5c;';
+  css+='font-size:9pt;color:#555;text-align:center;line-height:1.9}';
+  css+='.pbtn{display:block;margin:14px auto 20px;padding:11px 32px;background:#1a3a5c;';
+  css+='color:#fff;border:none;border-radius:6px;font-size:13pt;cursor:pointer;font-family:inherit}';
+
+  /* ── HTML 시작 ── */
+  var h='<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">';
+  h+='<title>드론 업무 예산절감 계산서</title>';
+  h+='<style>'+css+'</style></head><body>';
+
+  /* 인쇄 버튼 (화면에서만 표시) */
+  h+='<button class="pbtn no-print" onclick="window.print()">&#128424; 인쇄 / PDF 저장</button>';
+
+  /* 제목 */
+  h+='<h1>드론 업무 직접수행 예산절감 계산서</h1>';
+  h+='<div class="sub">양주시 기업지원과 AI드론정책팀</div>';
+
+  /* 기본 정보 */
+  h+='<div class="meta">';
+  h+='<div class="mrow"><span class="ml">사 업 명</span><span class="mv">'+(S.pName||'드론 측량')+'</span></div>';
+  h+='<div class="mrow"><span class="ml">작 성 일</span><span class="mv">'+d+'</span></div>';
+  h+='<div class="mrow"><span class="ml">작업 조건</span><span class="mv">'+S.area+'km&#178; / GSD '+S.gsd+'cm / '+S.terrain+' / '+S.days+'일</span></div>';
+  h+='<div class="mrow"><span class="ml">계산 기준</span><span class="mv">'+modeStr+'</span></div>';
+  h+='</div>';
+
+  /* 비용 비교 표 */
+  h+='<div class="th">비용 비교</div>';
+  h+='<table><thead><tr><th>구분</th><th class="tr">금액</th><th>비고</th></tr></thead><tbody>';
+  if(S.extQuote>0){
+    h+='<tr class="ref-row"><td>표준품셈 추정액 (참고)</td>';
+    h+='<td class="tr">'+fmt(S.ext)+'</td><td>'+modeStr+'</td></tr>';
+    h+='<tr><td>업체 실제 견적 (VAT포함)</td>';
+    h+='<td class="tr">'+fmt(S.extQuote)+'</td><td>낙실 금액</td></tr>';
+  } else {
+    h+='<tr><td>외부용역 견적 ('+modeStr+')</td>';
+    h+='<td class="tr">'+fmt(S.ext)+'</td><td>VAT 포함</td></tr>';
+  }
+  h+='<tr><td>직접수행 실소요 비용 ('+S.days+'일)</td>';
+  h+='<td class="tr">'+fmt(dir)+'</td><td>소모품 합계</td></tr>';
+  h+='<tr class="sv-row"><td>&#9654; 예산 절감액</td>';
+  h+='<td class="tr">'+fmt(S.saving)+'</td><td>절감률 '+S.rate.toFixed(1)+'%</td></tr>';
+  h+='</tbody></table>';
+
+  /* 공종별 내역 (소규모) */
+  if(!isLarge()&&S.bd.length>0){
+    h+='<div class="th">공종별 산출 내역</div>';
+    h+='<table><thead><tr><th>공종</th><th class="tr">금액</th><th>적용 기준</th></tr></thead><tbody>';
+    for(var i=0;i<S.bd.length;i++){
+      var bi=S.bd[i];
+      var cls=bi.sub?'sub-row':'';
+      h+='<tr class="'+cls+'"><td>'+bi.n+'</td>';
+      h+='<td class="tr">'+fmt(bi.a)+'</td>';
+      h+='<td>'+(bi.sub?'':modeStr)+'</td></tr>';
+    }
+    h+='</tbody></table>';
+  }
+
+  /* 직접수행 소모비용 내역 */
+  h+='<div class="th">직접수행 소모비용 내역</div>';
+  h+='<table><thead><tr><th>항목</th><th class="tr">일별 비용</th>';
+  h+='<th class="tr">'+S.days+'일 합계</th></tr></thead><tbody>';
+  for(var i=0;i<DIRECT.length;i++){
+    var dit=DIRECT[i];
+    var dval=S.dcosts[dit.id]!==undefined?S.dcosts[dit.id]:defCost(dit.id);
+    h+='<tr><td>'+dit.n+'</td>';
+    h+='<td class="tr">'+fmt(dval)+'</td>';
+    h+='<td class="tr">'+fmt(dval*S.days)+'</td></tr>';
+  }
+  h+='<tr class="sv-row"><td>합계</td>';
+  h+='<td class="tr">'+fmt(dir/Math.max(S.days,1))+'</td>';
+  h+='<td class="tr">'+fmt(dir)+'</td></tr>';
+  h+='</tbody></table>';
+
+  /* 감가상각비 참고 */
+  var dep=calcDep();
+  h+='<div class="note">&#128308; 장비 감가상각비 (참고, 예산절감 계산 미포함): ';
+  h+=fmt(dep)+' ('+S.days+'일 기준) — 드론 교체·추가 구매 예산 요청 근거로 활용</div>';
+
+  /* 산출 근거 */
+  h+='<div class="note">&#128204; 산출 근거: '+modeStr+' 적용';
+  h+=' | GSD계수 '+gC.toFixed(2)+' × 지형계수 '+tC.toFixed(1)+' × 면적계수';
+  h+=' | 직접수행 비용 = 소모품 × '+S.days+'일 | 공무원 인건비 0원 처리</div>';
+
+  /* 연간 실적 목록 (있을 때만) */
+  if(S.hist.length>0){
+    var ann=0;
+    for(var i=0;i<S.hist.length;i++) ann+=S.hist[i].sv;
+    h+='<div class="th">연간 누적 실적 ('+S.hist.length+'건 / 총 절감 '+fmt(ann)+')</div>';
+    h+='<table><thead><tr>';
+    h+='<th>사업명</th><th>날짜</th><th>면적</th><th>GSD</th>';
+    h+='<th class="tr">절감액</th><th class="tr">절감률</th></tr></thead><tbody>';
+    for(var i=0;i<S.hist.length;i++){
+      var hh=S.hist[i];
+      h+='<tr><td>'+(hh.nm||'무제')+'</td>';
+      h+='<td>'+hh.dt+'</td>';
+      h+='<td>'+hh.ar+'km&#178;</td>';
+      h+='<td>'+(hh.gsd||'-')+'cm</td>';
+      h+='<td class="tr">'+fmt(hh.sv)+'</td>';
+      h+='<td class="tr">'+hh.rt.toFixed(1)+'%</td></tr>';
+    }
+    h+='<tr class="sv-row"><td colspan="4">합계</td>';
+    h+='<td class="tr">'+fmt(ann)+'</td><td></td></tr>';
+    h+='</tbody></table>';
+  }
+
+  /* 푸터 */
+  h+='<div class="footer">';
+  h+='양주시 기업지원과 AI드론정책팀';
+  h+=' &nbsp;|&nbsp; 드론 업무 예산절감 계산기 v5.0';
+  h+=' &nbsp;|&nbsp; '+d;
+  h+='</div>';
+
+  h+='</body></html>';
+  return h;
+}
+
 function doText(){
   var el=qs('tOut');
   if(el){el.classList.remove('hidden'); qs('tTxt').textContent=makeTxt(); el.scrollIntoView({behavior:'smooth'});}
@@ -1070,14 +1472,31 @@ function doCopy(){
 
 function doCsv(){
   var dir=calcDir();
+  /* \u2500\u2500 \ud604\uc7ac \uc0ac\uc5c5 \ub0b4\uc5ed \uc2dc\ud2b8 \u2500\u2500 */
   var rows=[
     ['\ud56d\ubaa9','\uae08\uc561(\uc6d0)'],
     ['\uc0ac\uc5c5\uba85',S.pName||''],
     ['\uba74\uc801(km2)',S.area],
+    ['GSD(cm)',S.gsd],
+    ['\uc9c0\ud615',S.terrain],
     ['\uc678\ubd80\uc6a9\uc5ed \uacac\uc801',S.ext]
   ];
   for(var i=0;i<S.bd.length;i++) rows.push([S.bd[i].n,S.bd[i].a]);
   rows.push(['\uc9c1\uc811\uc218\ud589',dir],['\uc808\uac10\uc561',S.saving],['\uc808\uac10\ub960(%)',S.rate.toFixed(1)]);
+  /* \u2500\u2500 \uc5f0\uac04 \ubaa9\ub85d \uc2dc\ud2b8 (\uad6c\ubd84\uc120 \ud6c4 \ucd94\uac00) \u2500\u2500 */
+  if(S.hist.length>0){
+    rows.push([''],[''],
+      ['\uc5f0\uac04 \uc0ac\uc5c5 \ubaa9\ub85d'],
+      ['\uc0ac\uc5c5\uba85','\ub0a0\uc9dc','\uba74\uc801(km2)','GSD(cm)','\uc9c0\ud615','\uc808\uac10\uc561','\uc808\uac10\ub960(%)']
+    );
+    var annTot=0;
+    for(var i=0;i<S.hist.length;i++){
+      var hh=S.hist[i];
+      rows.push([hh.nm||'',hh.dt,hh.ar,hh.gsd||'',hh.tr||'',hh.sv,hh.rt.toFixed(1)]);
+      annTot+=hh.sv;
+    }
+    rows.push(['\ud569\uacc4','','','','',annTot,'']);
+  }
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(function(r){return r.join(',');}).join('\n')],{type:'text/csv;charset=utf-8'}));
   a.download='\ub4dc\ub860\uc808\uac10_'+new Date().toISOString().slice(0,10)+'.csv';
@@ -1086,14 +1505,15 @@ function doCsv(){
 }
 
 function doPdf(){
-  var txt=makeTxt();
-  var parts=['<!DOCT','YPE html><','html><','head><meta charset="UTF-8"><','style>',
-    'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;padding:40px;max-width:580px;margin:0 auto;}',
-    'pre{white-space:pre-wrap;font-size:14px;line-height:1.9;}<','/style><','/head><','body><','pre>',txt,'<','/pre><','/body><','/html>'];
-  var pt=parts.join('');
+  var html=makePdfHtml();
   var w=window.open('','_blank');
-  if(w){w.document.write(pt);w.document.close();w.focus();setTimeout(function(){w.print();},500);}
-  else toast('\ud31d\uc5c5 \ucc28\ub2e8 \ud574\uc81c \ud6c4 \ub2e4\uc2dc \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694');
+  if(w){
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+  } else {
+    toast('\ud31d\uc5c5 \ucc28\ub2e8 \ud574\uc81c \ud6c4 \ub2e4\uc2dc \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694');
+  }
 }
 
 /* ===== PWA (최초 1회만 등록) ===== */
@@ -1131,6 +1551,7 @@ document.addEventListener('focusin',function(e){
 });
 
 /* ===== 시작 ===== */
+loadFromUrl();
 render();
 </script>
 </body>
