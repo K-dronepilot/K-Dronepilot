@@ -211,6 +211,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .plan-tbl .tot-row td{background:var(--green-light);font-weight:700;font-size:13px;border-top:2px solid #86efac;border-bottom:none}
 .plan-tbl .tot-row .td-sv{font-size:15px;color:var(--green)}
 .plan-hint{font-size:11px;color:var(--gray500);margin-top:8px;line-height:1.6}
+.step-banner{background:var(--blue-light);border-left:4px solid var(--blue);padding:12px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;line-height:1.7;color:var(--blue-mid)}
+.step-banner strong{color:var(--blue);font-weight:700}
+.welcome-box{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:12px;padding:16px;margin-bottom:12px;text-align:center}
+.welcome-ico{font-size:32px;margin-bottom:6px}
+.welcome-title{font-size:16px;font-weight:700;color:var(--blue);margin-bottom:6px}
+.welcome-steps{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0 4px}
+.welcome-step{background:white;border:1px solid #bfdbfe;border-radius:20px;padding:4px 10px;font-size:11px;color:var(--blue-mid)}
+.field-hint{font-size:11px;color:var(--gray600,#4b5563);margin-top:6px;line-height:1.7;padding:7px 10px;background:#f8fafc;border-radius:6px;border-left:3px solid #bfdbfe}
+.warn-inline{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:8px 10px;font-size:12px;color:#dc2626;margin-top:8px;line-height:1.6}
+.result-guide{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;font-size:12px;color:#166534;margin-top:12px;line-height:1.8}
+.result-guide-row{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+.rg-ico{font-size:13px;flex-shrink:0}
 .ps-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:4px}
 .ps-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border:1.5px solid var(--gray200);border-radius:20px;background:var(--white);font-size:12px;font-weight:600;color:var(--gray700);cursor:pointer;transition:all .2s;min-height:36px}
 .ps-btn:active{background:var(--blue-light);border-color:var(--blue)}
@@ -650,6 +662,27 @@ function r1(){
     h+='</div>';
   }
 
+  /* ===== \ud658\uc601 \uba54\uc2dc\uc9c0 (\uccab \ubc29\ubb38 \uc2dc) ===== */
+  if(!_fromUrl && S.hist.length===0 && S.presets.length===0){
+    h+='<div class="welcome-box">';
+    h+='<div class="welcome-ico">&#128641;</div>';
+    h+='<div class="welcome-title">\ub4dc\ub860 \uc608\uc0b0\uc808\uac10 \uacc4\uc0b0\uae30</div>';
+    h+='<div style="font-size:12px;color:var(--gray500);margin-bottom:8px">\uc544\ub798 \uc870\uac74\uc744 \uc120\ud0dd\ud558\uba74 \uc678\ubd80 \uc6a9\uc5ed \ub300\ube44 \uc608\uc0b0 \uc808\uac10\uc561\uc774 \uc790\ub3d9 \uacc4\uc0b0\ub429\ub2c8\ub2e4</div>';
+    h+='<div class="welcome-steps">';
+    h+='<span class="welcome-step">1&#65039;&#8419; \uc870\uac74 \uc785\ub825</span>';
+    h+='<span class="welcome-step">&#8594;</span>';
+    h+='<span class="welcome-step">2&#65039;&#8419; \uc678\ubd80 \uacac\uc801 \ud655\uc778</span>';
+    h+='<span class="welcome-step">&#8594;</span>';
+    h+='<span class="welcome-step">3&#65039;&#8419; \uc9c1\uc811 \ube44\uc6a9 \uc785\ub825</span>';
+    h+='<span class="welcome-step">&#8594;</span>';
+    h+='<span class="welcome-step">4&#65039;&#8419; \uc808\uac10\uc561 \uacb0\uacfc</span>';
+    h+='</div>';
+    h+='</div>';
+  }
+
+  /* ===== STEP 1 \uc548\ub0b4 \ubc30\ub108 ===== */
+  h+='<div class="step-banner">&#128203; <strong>STEP 1</strong> &mdash; \ucd2c\uc601 \uc870\uac74\uc744 \uc120\ud0dd\ud558\uc138\uc694. \uc870\uac74\uc744 \uc785\ub825\ud558\uba74 \uc678\ubd80 \uc6a9\uc5ed \uacac\uc801\uc774 \uc790\ub3d9\uc73c\ub85c \uacc4\uc0b0\ub429\ub2c8\ub2e4. <strong>\uc798 \ubaa8\ub974\ub294 \ud56d\ubaa9\uc740 \uae30\ubcf8\uac12\uc744 \uadf8\ub300\ub85c \ub450\uc138\uc694.</strong></div>';
+
   /* ===== \ud504\ub9ac\uc14b \uce74\ub4dc ===== */
   h+='<div class="card">';
   h+='<div class="ct">&#11088; \uc990\uaca8\ucc3e\uae30 (\ud504\ub9ac\uc14b)</div>';
@@ -695,7 +728,9 @@ function r1(){
   h+='</div>';
   h+='<div class="area-row"><input id="aInp" type="number" min="0.001" step="any" value="'+dv+'">';
   h+='<span id="aUnitLbl" class="area-unit-lbl">'+(UNIT_LBL_MAP[S.aUnit]||'km\u00B2')+'</span></div>';
-  h+='<div class="area-conv" id="aConv">'+areaConvHint(dv,S.aUnit)+'</div></div>';
+  h+='<div class="area-conv" id="aConv">'+areaConvHint(dv,S.aUnit)+'</div>';
+  h+='<div class="field-hint">&#128208; 면적을 모르시나요? 카카오맵 &#8594; 거리재기 &#8594; 면적으로 대략 측정하세요.<br>1km&#178; = 약 1,000m &times; 1,000m &nbsp;|&nbsp; 여의도 &#8776; 0.7km&#178; &nbsp;|&nbsp; 양주시 전체 &#8776; 310km&#178;</div>';
+  h+='</div>';
 
   h+='<div class="card"><div class="ct">\ucd2c\uc601 \ud574\uc0c1\ub3c4 (GSD)</div>';
   h+='<div class="gsd-wrap"><div class="gsd-top">';
@@ -705,7 +740,9 @@ function r1(){
   h+='<div class="gsd-name-sub" id="gSub">'+gsdSub(S.gsd)+'</div></div></div>';
   h+='<input type="range" id="gRng" min="0.1" max="15" step="0.1" value="'+S.gsd+'">';
   h+='<div class="gsd-ticks"><span>0.1cm</span><span>5cm</span><span>10cm</span><span>15cm</span></div>';
-  h+='<div class="gsd-q '+gsdQcls(S.gsd)+'" id="gQ">'+gsdQtxt(S.gsd)+'</div></div></div>';
+  h+='<div class="gsd-q '+gsdQcls(S.gsd)+'" id="gQ">'+gsdQtxt(S.gsd)+'</div>';
+  h+='<div class="field-hint">&#128269; GSD(Ground Sample Distance)란? 사진 한 픽셀이 실제 지면에서 몇 cm인지를 의미합니다.<br><strong>3cm</strong> — 정밀측량·시설물 &nbsp;|&nbsp; <strong>5cm</strong> — 도로·건물 일반현황 &#11088;권장 &nbsp;|&nbsp; <strong>10~15cm</strong> — 산림·광역조사<br>GSD가 작을수록 고품질이지만 촬영시간&#8593; 비용&#8593;</div>';
+  h+='</div></div>';
 
   h+='<div class="card"><div class="ct">\uc9c0\ud615 \uc720\ud615</div><div class="opt-grid c3">';
   for(var i=0;i<TERRAINS.length;i++){
@@ -714,7 +751,9 @@ function r1(){
     h+='<span class="ob-main">'+tn+'<span style="font-size:10px;color:'+(S.terrain===tn?'var(--blue-mid)':'var(--gray500)')+'"> (\xd7'+ti.coef+')</span></span>';
     h+='<span class="ob-sub">'+ti.tip.split('.')[0]+'</span></button>';
   }
-  h+='</div></div>';
+  h+='</div>';
+  h+='<div class="field-hint">&#128506; \uc798 \ubaa8\ub974\uba74 <strong>\uc2dc\uac00\uc9c0</strong>\ub97c \uae30\ubcf8\uc73c\ub85c \uc120\ud0dd\ud558\uc138\uc694. \uc9c0\ud615\uc774 \ubcf5\uc7a1\ud560\uc218\ub85d \ube44\ud589\uc2dc\uac04\uc774 \uae38\uc5b4\uc838 \ube44\uc6a9\uc774 \uc62c\ub77c\uac11\ub2c8\ub2e4.<br>\ud3c9\uc9c0(\ub17c\ubc25\u00b7\ud558\ucc9c) &nbsp;|&nbsp; \uc2dc\uac00\uc9c0(\uc77c\ubc18\uc8fc\ud0dd\u00b7\uc0c1\uc5c5) &nbsp;|&nbsp; \ubc00\uc9d1\uc2dc\uac00\uc9c0(\uace0\uce35\uac74\ubb3c) &nbsp;|&nbsp; \uc0b0\uc9c0\u00b7\uc0b0\uc545</div>';
+  h+='</div>';
 
   h+='<div class="card"><div class="ct">\uacb0\uacfc\ubb3c \uc885\ub958 (\ubcf5\uc218 \uc120\ud0dd \uac00\ub2a5)</div><div class="out-grid">';
   for(var i=0;i<OUTPUTS.length;i++){
@@ -726,7 +765,9 @@ function r1(){
     h+='<div class="od">'+o.tip.split('.')[0]+'</div>';
     h+='</div>';
   }
-  h+='</div></div>';
+  h+='</div>';
+  h+='<div class="field-hint">&#128230; \ucc98\uc74c\uc774\ub77c\uba74 <strong>2D \uc815\uc0ac\uc601\uc0c1\ub9cc</strong> \uc120\ud0dd\ud558\uc138\uc694.<br>3D \uba54\uc2dc\ubaa8\ub378\u00b7LiDAR\ub294 \ubcc4\ub3c4 \uc7a5\ube44(Zenmuse L2 \ub4f1)\uac00 \uc788\uc5b4\uc57c \ud569\ub2c8\ub2e4. LiDAR \ubbf8\ubcf4\uc720 \uc2dc \uc120\ud0dd\ud558\uc9c0 \ub9c8\uc138\uc694.</div>';
+  h+='</div>';
 
   h+='<div class="card"><div class="ct">\uc0ac\uc6a9 \ub4dc\ub860</div><div class="eq-grid c3">';
   for(var i=0;i<DRONES.length;i++){
@@ -754,6 +795,7 @@ function r1(){
 function r2(){
   calcExt();
   var h='';
+  h+='<div class="step-banner">&#128176; <strong>STEP 2</strong> &mdash; 표준품셈 기준 <strong>외부 업체에 발주할 때의 예상 금액</strong>을 확인하세요.<br>실제 견적서를 받으셨다면 하단 입력란에 금액을 입력하면 더 정확한 비교가 됩니다.</div>';
   var gC=gsdCoef(S.gsd), tC=(TERRAIN_INFO[S.terrain]||{coef:1.0}).coef;
   var large=isLarge();
 
@@ -898,10 +940,13 @@ function r2(){
 function r3(){
   var d=droneObj(S.drone), sw=swObj(S.sw);
   var h='';
+  h+='<div class="step-banner">&#128295; <strong>STEP 3</strong> &mdash; \uc6b0\ub9ac \ubd80\uc11c\uac00 \uc9c1\uc811 \ucd2c\uc601\ud560 \ub54c \ub4dc\ub294 <strong>\uc2e4\ube44\ub9cc \uc785\ub825</strong>\ud558\uc138\uc694.<br>&#10004; \uc778\uac74\ube44 = 0\uc6d0 &mdash; \uacf5\ubb34\uc6d0 \uc6d4\uae09\uc740 \uc774\ubbf8 \uc9c0\uae09\ub418\ub294 \ube44\uc6a9\uc774\ubbc0\ub85c \uc808\uac10 \ub300\uc0c1\uc774 \uc544\ub2d9\ub2c8\ub2e4<br>&#10004; \uac10\uac00\uc0c1\uac01\ube44\ub294 \uc608\uc0b0\uc808\uac10 \uacc4\uc0b0\uc5d0\uc11c \uc81c\uc678\ub418\uba70 \ubcf4\uace0\uc11c \ucc38\uace0\uc6a9\uc73c\ub85c\ub9cc \ud45c\uc2dc\ub429\ub2c8\ub2e4</div>';
   h+='<div class="card"><div class="ct">\uc9c1\uc811 \uc218\ud589 \uc18c\uc694\uc77c\uc218</div>';
   h+='<div class="field"><label>\uc804\uccb4 \uc791\uc5c5 \uc77c\uc218</label>';
   h+='<input id="dInp" type="number" min="1" max="365" value="'+S.days+'">';
-  h+='<div class="hint">\ud604\uc7a5 \ucd2c\uc601 \ubc0f \ub370\uc774\ud130 \ucc98\ub9ac\uc5d0 \uc2e4\uc81c \ud22c\uc785\ud55c \uc77c\uc218</div></div></div>';
+  h+='<div class="hint">\ud604\uc7a5 \ucd2c\uc601 \ubc0f \ub370\uc774\ud130 \ucc98\ub9ac\uc5d0 \uc2e4\uc81c \ud22c\uc785\ud55c \uc77c\uc218</div>';
+  h+='<div class="field-hint">&#8987; \uc77c\uc218 \uac00\uc774\ub4dc: 0.5km&#178; \uc774\ud558 &#8594; 1~2\uc77c &nbsp;|&nbsp; 1~2km&#178; &#8594; 2~3\uc77c &nbsp;|&nbsp; 5km&#178; \uc774\uc0c1 &#8594; 4\uc77c+<br>\uc545\ucc9c\ud6c4 \uc608\ube44\uc77c \ud3ec\ud568\uc744 \uad8c\uc7a5\ud569\ub2c8\ub2e4</div>';
+  h+='</div></div>';
 
   h+='<div class="card"><div class="ct">\uc18c\ubaa8 \ube44\uc6a9 (\uc77c\ubcc4)</div>';
   h+='<div class="info-box" style="margin-bottom:12px">&#128295; '+d.n+' + '+sw.n+' \uae30\uc900 \uc790\ub3d9 \uc124\uc815. \uc218\uc815 \uac00\ub2a5\ud569\ub2c8\ub2e4.</div>';
@@ -975,6 +1020,15 @@ function r4(){
   h+='<tr><td>\uc9c1\uc811 \uc218\ud589 \uc2e4\uc18c\uc694 \ube44\uc6a9 ('+S.days+'\uc77c)</td><td>'+fmt(dir)+'</td></tr>';
   h+='<tr class="tot"><td>&#128176; \uc608\uc0b0 \uc808\uac10\uc561</td><td style="color:var(--green);font-size:18px">'+fmt(sv)+'</td></tr>';
   h+='</table></div>';
+  if(sv<=0){
+    h+='<div class="warn-inline">&#9888;&#65039; \uc9c1\uc811 \uc218\ud589 \ube44\uc6a9\uc774 \uc678\ubd80 \uc6a9\uc5ed\ubcf4\ub2e4 \ud07d\ub2c8\ub2e4. STEP 3\uc5d0\uc11c \uc791\uc5c5 \uc77c\uc218\ub97c \ub2e4\uc2dc \ud655\uc778\ud574\ubcf4\uc138\uc694.</div>';
+  }
+  h+='<div class="result-guide">';
+  h+='<div style="font-weight:700;margin-bottom:8px">&#128214; \uc774 \uacb0\uacfc\ub97c \ud65c\uc6a9\ud558\uc138\uc694</div>';
+  h+='<div class="result-guide-row"><span class="rg-ico">&#128196;</span><span><strong>PDF \ucd9c\ub825</strong> &#8594; \uc608\uc0b0 \uc808\uac10 \uadfc\uac70\uc790\ub8cc\ub85c \uc81c\ucd9c</span></div>';
+  h+='<div class="result-guide-row"><span class="rg-ico">&#128279;</span><span><strong>URL \uacf5\uc720</strong> &#8594; \uc0c1\uae09\uc790\u00b7\ud0c0 \ubd80\uc11c\uc5d0 \ub9c1\ud06c\ub85c \uc989\uc2dc \uacf5\uc720</span></div>';
+  h+='<div class="result-guide-row"><span class="rg-ico">&#128190;</span><span><strong>\uc2e4\uc801 \uc800\uc7a5</strong> &#8594; STEP 5\uc5d0\uc11c \uc5f0\uac04 \uc808\uac10 \uc2e4\uc801\uc73c\ub85c \ub204\uc801</span></div>';
+  h+='</div>';
   h+='<div class="card" style="border-left:4px solid var(--green)">';
   h+='<div class="ct" style="color:var(--green)">\uc808\uac10 \uc758\ubbf8</div>';
   var dep=calcDep();
@@ -990,7 +1044,7 @@ function r5(){
   var ann=0; for(var i=0;i<S.hist.length;i++) ann+=S.hist[i].sv;
   var h='<div class="card"><div class="ct">\uc5f0\uac04 \ub204\uc801 \uc808\uac10 \uc2e4\uc801</div>';
   if(S.hist.length===0){
-    h+='<div class="hi-empty">\uc800\uc7a5\ub41c \uc2e4\uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4<br>STEP 4 \uacb0\uacfc \ud655\uc778 \ud6c4 \uc774 \ubc84\ud2bc\uc73c\ub85c \uc800\uc7a5\ud558\uc138\uc694</div>';
+    h+='<div class="hi-empty">&#128202; \uc800\uc7a5\ub41c \uc2e4\uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4<br><span style="font-size:12px;color:var(--gray500)">STEP 4\uc5d0\uc11c \uacb0\uacfc \ud655\uc778 \ud6c4 <strong>\uc2e4\uc801 \uc800\uc7a5</strong> \ubc84\ud2bc\uc744 \ub204\ub974\uba74<br>\uc5ec\uae30\uc5d0 \uc5f0\uac04 \ub204\uc801 \uc2e4\uc801\uc774 \uc313\uc785\ub2c8\ub2e4</span></div>';
   } else {
     h+='<div class="ann-sum"><span class="ann-lbl">\uc62c\ud574 \ucd1d \uc808\uac10\uc561 ('+S.hist.length+'\uac74)</span><span class="ann-val">'+fmt(ann)+'</span></div>';
     h+='<div class="plan-wrap"><table class="plan-tbl">';
