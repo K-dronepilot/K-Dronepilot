@@ -276,6 +276,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- ===== 건의하기 플로팅 버튼 ===== -->
+<button class="fb-fab" id="fbFab">&#128172; 건의하기</button>
+
+<!-- ===== 건의하기 모달 ===== -->
+<div class="fb-overlay" id="fbOverlay">
+  <div class="fb-modal">
+    <div class="fb-modal-title">&#128172; 개발자에게 건의하기</div>
+    <div class="fb-modal-desc">기능 개선 아이디어, 버그 신고, 사용 중 불편한 점을 알려주세요!<br>보내주신 내용은 다음 버전 개발에 반영됩니다.</div>
+    <div class="fb-type-row" id="fbTypeRow">
+      <button class="fb-type-btn sel" data-fbt="0">&#128161; 기능 건의</button>
+      <button class="fb-type-btn" data-fbt="1">&#128027; 버그 신고</button>
+      <button class="fb-type-btn" data-fbt="2">&#128172; 기타</button>
+    </div>
+    <textarea class="fb-textarea" id="fbText" placeholder="건의 내용을 자유롭게 입력해주세요...&#10;예) 특정 버튼이 작동하지 않아요 / 이런 기능이 있으면 좋겠어요"></textarea>
+    <div class="fb-actions">
+      <button class="fb-cancel-btn" id="fbCancel">취소</button>
+      <button class="fb-send-btn" id="fbSend">&#128231; 보내기</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ===== 2026 표준품셈 노임단가 ===== */
 var W={t1:326774,t2:289265,t3:251596,t4:215609,f1:200786,f2:300967,f3:236885,f4:229483,f5:242957,inf:215609,lb:172068};
@@ -1679,26 +1701,5 @@ document.getElementById('fbTypeRow').addEventListener('click', function(e){
 loadFromUrl();
 render();
 </script>
-
-<!-- ===== 건의하기 플로팅 버튼 ===== -->
-<button class="fb-fab" id="fbFab">&#128172; 건의하기</button>
-
-<!-- ===== 건의하기 모달 ===== -->
-<div class="fb-overlay" id="fbOverlay">
-  <div class="fb-modal">
-    <div class="fb-modal-title">&#128172; 개발자에게 건의하기</div>
-    <div class="fb-modal-desc">기능 개선 아이디어, 버그 신고, 사용 중 불편한 점을 알려주세요!<br>보내주신 내용은 다음 버전 개발에 반영됩니다.</div>
-    <div class="fb-type-row" id="fbTypeRow">
-      <button class="fb-type-btn sel" data-fbt="0">&#128161; 기능 건의</button>
-      <button class="fb-type-btn" data-fbt="1">&#128027; 버그 신고</button>
-      <button class="fb-type-btn" data-fbt="2">&#128172; 기타</button>
-    </div>
-    <textarea class="fb-textarea" id="fbText" placeholder="건의 내용을 자유롭게 입력해주세요...&#10;예) 특정 버튼이 작동하지 않아요 / 이런 기능이 있으면 좋겠어요"></textarea>
-    <div class="fb-actions">
-      <button class="fb-cancel-btn" id="fbCancel">취소</button>
-      <button class="fb-send-btn" id="fbSend">&#128231; 보내기</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
