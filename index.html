@@ -8,6 +8,15 @@
 <meta name="apple-mobile-web-app-title" content="드론절감계산기">
 <meta name="theme-color" content="#1a3a5c">
 <title>드론 업무 예산절감 계산기 v5.0</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DVLH011DEY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-DVLH011DEY');
+  function gaEvent(name, params){if(typeof gtag!=='undefined'){gtag('event',name,params||{});}}
+</script>
 <style>
 :root{
   --blue:#1a3a5c;--blue-mid:#2d5f8a;--blue-light:#e8f2fb;
@@ -448,6 +457,7 @@ function makeShareUrl(){
 }
 
 function doShareUrl(){
+  gaEvent('share_url',{area:S.area,gsd:S.gsd,terrain:S.terrain});
   var url=makeShareUrl();
   if(navigator.clipboard){
     navigator.clipboard.writeText(url).then(function(){
@@ -1276,6 +1286,7 @@ function addHist(){
     ar:S.area, gsd:S.gsd, tr:S.terrain,
     ext:S.ext, dir:dir, sv:S.saving, rt:S.rate
   });
+  gaEvent('calc_complete',{area:S.area,gsd:S.gsd,terrain:S.terrain,saving:S.saving,rate:Math.round(S.rate)});
   saveLs(); toast('\uc2e4\uc801\uc774 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4'); render();
 }
 
@@ -1505,6 +1516,7 @@ function doCsv(){
 }
 
 function doPdf(){
+  gaEvent('pdf_export',{area:S.area,gsd:S.gsd,saving:S.saving});
   var html=makePdfHtml();
   var w=window.open('','_blank');
   if(w){
