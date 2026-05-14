@@ -211,6 +211,28 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
 .plan-tbl .tot-row td{background:var(--green-light);font-weight:700;font-size:13px;border-top:2px solid #86efac;border-bottom:none}
 .plan-tbl .tot-row .td-sv{font-size:15px;color:var(--green)}
 .plan-hint{font-size:11px;color:var(--gray500);margin-top:8px;line-height:1.6}
+/* ===== 기간 필터 탭 ===== */
+.pf-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;align-items:center}
+.pf-tab{padding:5px 11px;border-radius:20px;border:1.5px solid var(--gray200);background:var(--white);font-size:12px;font-weight:600;color:var(--gray500);cursor:pointer;transition:all .2s;line-height:1.4}
+.pf-tab.active{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.pf-tab .pf-cnt{font-size:10px;opacity:.75;margin-left:3px}
+.db-toggle{margin-left:auto;display:flex;gap:3px;background:var(--gray100);border-radius:8px;padding:3px;flex-shrink:0}
+.db-btn{padding:3px 10px;border-radius:6px;border:none;font-size:11px;font-weight:600;color:var(--gray500);background:none;cursor:pointer;transition:all .2s}
+.db-btn.active{background:var(--white);color:var(--blue);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+/* ===== 체크박스 & 선택 ===== */
+.hist-chk{width:16px;height:16px;accent-color:var(--blue);cursor:pointer;vertical-align:middle}
+.sel-row{background:var(--blue-light)!important}
+/* ===== 선택 요약 바 ===== */
+.sel-bar{display:flex;align-items:center;justify-content:space-between;background:var(--blue-light);border:1.5px solid var(--accent);border-radius:10px;padding:12px 16px;margin-top:12px;gap:10px;flex-wrap:wrap}
+.sel-bar-l{font-size:13px;font-weight:600;color:var(--blue)}
+.sel-bar-sub{font-size:11px;color:var(--blue);opacity:.8;margin-top:2px}
+.sel-bar-amt{font-size:17px;font-weight:700;color:var(--blue)}
+.sel-ex-wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.sel-ex-btn{display:flex;flex-direction:column;align-items:center;padding:12px 8px;border:1.5px solid var(--gray200);border-radius:10px;background:var(--white);cursor:pointer;gap:3px;transition:all .2s;font-family:inherit}
+.sel-ex-btn:hover{border-color:var(--accent);background:var(--blue-light)}
+.sel-ex-btn .sei{font-size:20px}
+.sel-ex-btn .set{font-size:12px;font-weight:700;color:var(--gray900)}
+.sel-ex-btn .sed{font-size:10px;color:var(--gray500)}
 .step-banner{background:var(--blue-light);border-left:4px solid var(--blue);padding:12px 14px;border-radius:8px;margin-bottom:12px;font-size:13px;line-height:1.7;color:var(--blue-mid)}
 .step-banner strong{color:var(--blue);font-weight:700}
 .welcome-box{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #bfdbfe;border-radius:12px;padding:16px;margin-bottom:12px;text-align:center}
@@ -528,6 +550,7 @@ var UNIT_LBL_MAP = {km2:'km\u00B2', m2:'m\u00B2', py:'\ud3c9', ha:'ha'};
 /* ===== 상태 ===== */
 var S = {
   step:1, pName:'', shotDate:'', shotCount:0, shotAlt:0, area:0.25, aUnit:'km2', gsd:5,
+  histFilter:'all', histDateBase:'saved', selHist:[],
   terrain:'\ud3c9\uc9c0',
   outputs:{map2d:true, mesh3d:false, lidar:false},
   drone:'m400', sw:'djiterra',
@@ -1211,42 +1234,178 @@ function r4(){
   return h;
 }
 
+/* ===== STEP 5 헬퍼 ===== */
+function histItemDate(hh){
+  if(S.histDateBase==='shot'&&hh.shotDate){
+    var p=hh.shotDate.split('-');
+    return {y:parseInt(p[0]),m:parseInt(p[1])};
+  }
+  var m=hh.dt.match(/(\d{4})\.\s*(\d+)/);
+  return m?{y:parseInt(m[1]),m:parseInt(m[2])}:{y:0,m:0};
+}
+function filterLbl(f){
+  return ({all:'전체',year:'올해',h1:'상반기',h2:'하반기',q1:'1분기',q2:'2분기',q3:'3분기',q4:'4분기'})[f]||'전체';
+}
+function filteredHistWithIdx(){
+  var cy=new Date().getFullYear(), f=S.histFilter, res=[];
+  for(var i=0;i<S.hist.length;i++){
+    var hh=S.hist[i], d=histItemDate(hh), ok=false;
+    if(f==='all') ok=true;
+    else if(f==='year') ok=(d.y===cy);
+    else if(f==='h1')   ok=(d.y===cy&&d.m>=1&&d.m<=6);
+    else if(f==='h2')   ok=(d.y===cy&&d.m>=7&&d.m<=12);
+    else if(f==='q1')   ok=(d.y===cy&&d.m>=1&&d.m<=3);
+    else if(f==='q2')   ok=(d.y===cy&&d.m>=4&&d.m<=6);
+    else if(f==='q3')   ok=(d.y===cy&&d.m>=7&&d.m<=9);
+    else if(f==='q4')   ok=(d.y===cy&&d.m>=10&&d.m<=12);
+    if(ok) res.push({idx:i,hh:hh});
+  }
+  return res;
+}
+function tabCount(f){
+  var cy=new Date().getFullYear(),c=0;
+  for(var i=0;i<S.hist.length;i++){
+    var d=histItemDate(S.hist[i]);
+    if(f==='all') c++;
+    else if(f==='year'&&d.y===cy) c++;
+    else if(f==='h1'&&d.y===cy&&d.m>=1&&d.m<=6) c++;
+    else if(f==='h2'&&d.y===cy&&d.m>=7&&d.m<=12) c++;
+    else if(f==='q1'&&d.y===cy&&d.m>=1&&d.m<=3) c++;
+    else if(f==='q2'&&d.y===cy&&d.m>=4&&d.m<=6) c++;
+    else if(f==='q3'&&d.y===cy&&d.m>=7&&d.m<=9) c++;
+    else if(f==='q4'&&d.y===cy&&d.m>=10&&d.m<=12) c++;
+  }
+  return c;
+}
+function makeMultiTxt(items){
+  if(!items.length) return '';
+  var ln='━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+  var today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var totSv=0,totExt=0;
+  for(var i=0;i<items.length;i++){totSv+=items[i].sv||0;totExt+=items[i].ext||0;}
+  var avgRt=totExt>0?(totSv/totExt*100).toFixed(1):0;
+  var lines=[ln,'드론 직접수행 실적 보고서 ('+filterLbl(S.histFilter)+')',ln,
+    '□ 기    관 : '+(_cfg.org||'-'),
+    '□ 담 당 자 : '+(_cfg.name||'-'),
+    '□ 작성일자 : '+today,
+    '□ 기    간 : '+filterLbl(S.histFilter),
+    ln,'[사업 목록]'
+  ];
+  for(var i=0;i<items.length;i++){
+    var hi=items[i];
+    lines.push(' '+(i+1)+'. '+(hi.nm||'무제 사업')+' | '+(hi.shotDate||hi.dt)+' | '+hi.ar+'km² | 절감 '+fmt(hi.sv)+' ('+hi.rt.toFixed(1)+'%)');
+  }
+  lines.push(ln);
+  lines.push('◆ 총 '+items.length+'건   합계 절감액 : '+fmt(totSv));
+  lines.push('◆ 평균 절감율          : '+avgRt+'%');
+  lines.push(ln+'양주시 AI드론정책팀');
+  return lines.join('\n');
+}
+function makeMultiCsv(items){
+  var BOM='﻿';
+  var rows=['No,사업명,저장일,촬영날짜,면적(km²),GSD(cm),지형,촬영고도(m),촬영장수(장),외부용역(원),직접수행(원),절감액(원),절감율(%)'];
+  for(var i=0;i<items.length;i++){
+    var hi=items[i];
+    rows.push([i+1,'"'+(hi.nm||'').replace(/"/g,'""')+'"',hi.dt||'',hi.shotDate||'',hi.ar||0,hi.gsd||'',hi.tr||'',hi.shotAlt||0,hi.shotCount||0,hi.ext||0,hi.dir||0,hi.sv||0,hi.rt?hi.rt.toFixed(1):0].join(','));
+  }
+  var totSv=0,totExt=0;
+  for(var i=0;i<items.length;i++){totSv+=items[i].sv||0;totExt+=items[i].ext||0;}
+  var avgRt=totExt>0?(totSv/totExt*100).toFixed(1):0;
+  rows.push(['"합계 '+items.length+'건"','','','','','','','','',totExt,'',totSv,avgRt].join(','));
+  return BOM+rows.join('\n');
+}
+
 /* ===== STEP 5 렌더 ===== */
 function r5(){
-  var ann=0; for(var i=0;i<S.hist.length;i++) ann+=S.hist[i].sv;
-  var h='<div class="card"><div class="ct">\uc5f0\uac04 \ub204\uc801 \uc808\uac10 \uc2e4\uc801</div>';
+  var fItems=filteredHistWithIdx();
+  var selSet={};
+  for(var i=0;i<S.selHist.length;i++) selSet[S.selHist[i]]=true;
+  var selItems=[];
+  for(var i=0;i<S.hist.length;i++){if(selSet[i]) selItems.push(S.hist[i]);}
+  var selSv=0,selExt=0;
+  for(var i=0;i<selItems.length;i++){selSv+=selItems[i].sv||0;selExt+=selItems[i].ext||0;}
+  var totSv=0;
+  for(var i=0;i<fItems.length;i++) totSv+=fItems[i].hh.sv||0;
+  var ann=totSv; // 하위 호환용
+  var h='';
+  /* \u2500\u2500 \uc2e4\uc801 \ubaa9\ub85d \uce74\ub4dc \u2500\u2500 */
+  h+='<div class="card"><div class="ct">\uc5f0\uac04 \ub204\uc801 \uc808\uac10 \uc2e4\uc801</div>';
   if(S.hist.length===0){
     h+='<div class="hi-empty">&#128202; \uc800\uc7a5\ub41c \uc2e4\uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4<br><span style="font-size:12px;color:var(--gray500)">STEP 4\uc5d0\uc11c \uacb0\uacfc \ud655\uc778 \ud6c4 <strong>\uc2e4\uc801 \uc800\uc7a5</strong> \ubc84\ud2bc\uc744 \ub204\ub974\uba74<br>\uc5ec\uae30\uc5d0 \uc5f0\uac04 \ub204\uc801 \uc2e4\uc801\uc774 \uc313\uc785\ub2c8\ub2e4</span></div>';
   } else {
-    h+='<div class="ann-sum"><span class="ann-lbl">\uc62c\ud574 \ucd1d \uc808\uac10\uc561 ('+S.hist.length+'\uac74)</span><span class="ann-val">'+fmt(ann)+'</span></div>';
+    /* \uae30\uac04 \ud544\ud130 \ud0ed */
+    var TABS=[{v:'all',l:'\uc804\uccb4'},{v:'year',l:'\uc62c\ud574'},{v:'h1',l:'\uc0c1\ubc18\uae30'},{v:'h2',l:'\ud558\ubc18\uae30'},{v:'q1',l:'1\ubd84\uae30'},{v:'q2',l:'2\ubd84\uae30'},{v:'q3',l:'3\ubd84\uae30'},{v:'q4',l:'4\ubd84\uae30'}];
+    h+='<div class="pf-wrap">';
+    for(var i=0;i<TABS.length;i++){
+      var tb=TABS[i], tc=tabCount(tb.v);
+      h+='<button class="pf-tab'+(S.histFilter===tb.v?' active':'')+'" data-pf="'+tb.v+'">'+tb.l;
+      if(tc>0) h+='<span class="pf-cnt">'+tc+'</span>';
+      h+='</button>';
+    }
+    h+='<div class="db-toggle">';
+    h+='<button class="db-btn'+(S.histDateBase==='saved'?' active':'')+'" data-db="saved">\uc800\uc7a5\uc77c</button>';
+    h+='<button class="db-btn'+(S.histDateBase==='shot'?' active':'')+'" data-db="shot">\ucd2c\uc601\uc77c</button>';
+    h+='</div></div>';
+
+    /* \uc9d1\uacc4 \uc694\uc57d */
+    h+='<div class="ann-sum"><span class="ann-lbl">'+filterLbl(S.histFilter)+' \ud569\uacc4 ('+fItems.length+'\uac74)</span><span class="ann-val">'+fmt(totSv)+'</span></div>';
+
+    /* \ud14c\uc774\ube14 */
+    var allFiltSel=(fItems.length>0&&S.selHist.length===fItems.length&&fItems.every(function(fi){return selSet[fi.idx];}));
     h+='<div class="plan-wrap"><table class="plan-tbl">';
     h+='<thead><tr>';
-    h+='<th>\uc0ac\uc5c5\uba85</th><th>\uba74\uc801</th><th>GSD</th><th>\uc9c0\ud615</th><th>\uc808\uac10\uc561</th><th>\uc808\uac10\ub960</th><th></th>';
+    h+='<th><input type="checkbox" class="hist-chk" id="selAll"'+(allFiltSel?' checked':'')+'></th>';
+    h+='<th>\uc0ac\uc5c5\uba85</th><th>\ub0a0\uc9dc</th><th>\uba74\uc801</th><th>GSD</th><th>\uc9c0\ud615</th><th>\uc808\uac10\uc561</th><th>\uc808\uac10\uc728</th><th></th>';
     h+='</tr></thead><tbody>';
-    for(var i=0;i<S.hist.length;i++){
-      var hh=S.hist[i];
-      h+='<tr>';
-      h+='<td><div class="td-name">'+(hh.nm||'\ubb34\uc81c \uc0ac\uc5c5')+'</div>';
-      h+='<div class="td-date">'+hh.dt+'</div></td>';
-      h+='<td>'+hh.ar+'km&#178;</td>';
-      h+='<td>'+(hh.gsd||'-')+'cm</td>';
-      h+='<td>'+(hh.tr||'-')+'</td>';
-      h+='<td class="td-sv">'+fmt(hh.sv)+'</td>';
-      h+='<td class="td-rt">'+hh.rt.toFixed(1)+'%</td>';
-      h+='<td class="td-del"><button class="hi-del" data-di="'+i+'">&times;</button></td>';
-      h+='</tr>';
+    if(fItems.length===0){
+      h+='<tr><td colspan="9" style="text-align:center;color:var(--gray500);padding:20px;font-size:13px">\ud574\ub2f9 \uae30\uac04\uc5d0 \uc2e4\uc801\uc774 \uc5c6\uc2b5\ub2c8\ub2e4</td></tr>';
+    } else {
+      for(var i=0;i<fItems.length;i++){
+        var fi=fItems[i], hh=fi.hh, oi=fi.idx;
+        var isSel=!!selSet[oi];
+        h+='<tr'+(isSel?' class="sel-row"':'')+' >';
+        h+='<td><input type="checkbox" class="hist-chk hist-sel" data-oi="'+oi+'"'+(isSel?' checked':'')+'></td>';
+        h+='<td><div class="td-name">'+(hh.nm||'\ubb34\uc81c \uc0ac\uc5c5')+'</div>';
+        h+='<div class="td-date">'+(hh.shotDate?'&#128247;'+hh.shotDate+' / ':'')+hh.dt+'</div></td>';
+        h+='<td>'+(hh.shotDate?hh.shotDate:hh.dt)+'</td>';
+        h+='<td>'+hh.ar+'km&#178;</td>';
+        h+='<td>'+(hh.gsd||'-')+'cm</td>';
+        h+='<td>'+(hh.tr||'-')+'</td>';
+        h+='<td class="td-sv">'+fmt(hh.sv)+'</td>';
+        h+='<td class="td-rt">'+hh.rt.toFixed(1)+'%</td>';
+        h+='<td class="td-del"><button class="hi-del" data-di="'+oi+'">&times;</button></td>';
+        h+='</tr>';
+      }
     }
+    var totExt2=0; for(var i=0;i<fItems.length;i++) totExt2+=fItems[i].hh.ext||0;
     h+='<tr class="tot-row">';
-    h+='<td colspan="4">&#128176; \ud569\uacc4 ('+S.hist.length+'\uac74)</td>';
-    h+='<td class="td-sv">'+fmt(ann)+'</td>';
-    var annExt=0; for(var i=0;i<S.hist.length;i++) annExt+=S.hist[i].ext;
-    h+='<td class="td-rt">'+(annExt>0?(ann/annExt*100).toFixed(1)+'%':'-')+'</td>';
+    h+='<td></td><td colspan="6">&#128176; \ud569\uacc4 ('+fItems.length+'\uac74)</td>';
+    h+='<td class="td-sv">'+fmt(totSv)+'</td>';
+    h+='<td class="td-rt">'+(totExt2>0?(totSv/totExt2*100).toFixed(1)+'%':'-')+'</td>';
     h+='<td></td></tr>';
     h+='</tbody></table></div>';
-    h+='<div class="plan-hint">&#128204; \ud45c\ub97c \uc606\uc73c\ub85c \ubc00\uba74 \uc804\uccb4 \ud56d\ubaa9\uc744 \ubcfc \uc218 \uc788\uc2b5\ub2c8\ub2e4 &middot; GSD\u00b7\uc9c0\ud615\uc740 \uc800\uc7a5 \uc2dc\uc810\ubd80\ud130 \uae30\ub85d\ub429\ub2c8\ub2e4</div>';
+    h+='<div class="plan-hint">&#128204; \ud45c\ub97c \uc606\uc73c\ub85c \ubc00\uba74 \uc804\uccb4 \ud56d\ubaa9\uc744 \ubcfc \uc218 \uc788\uc2b5\ub2c8\ub2e4 &middot; \uae30\uc900: '+(S.histDateBase==='shot'?'\ucd2c\uc601\uc77c':'\uc800\uc7a5\uc77c')+'</div>';
+
+    /* \uc120\ud0dd \uc694\uc57d & \ub0b4\ubcf4\ub0b4\uae30 */
+    if(S.selHist.length>0){
+      var avgRt2=selExt>0?(selSv/selExt*100).toFixed(1):0;
+      h+='<div class="sel-bar">';
+      h+='<div><div class="sel-bar-l">&#10004; '+S.selHist.length+'\uac74 \uc120\ud0dd\ub428</div>';
+      h+='<div class="sel-bar-sub">\ud3c9\uade0 \uc808\uac10\uc728 '+avgRt2+'%</div></div>';
+      h+='<div class="sel-bar-amt">'+fmt(selSv)+'</div>';
+      h+='</div>';
+      h+='<div style="font-size:12px;font-weight:600;color:var(--gray500);margin:12px 0 6px">&#128196; \uc120\ud0dd \ud56d\ubaa9 \ud1b5\ud569 \ubcf4\uace0\uc11c</div>';
+      h+='<div class="sel-ex-wrap">';
+      h+='<button class="sel-ex-btn" id="selExTxt"><span class="sei">&#128203;</span><span class="set">\ud14d\uc2a4\ud2b8 \ubcf5\uc0ac</span><span class="sed">\ud55c\uae00\u00b7\uc6cc\ub4dc \ubd99\uc5ec\ub123\uae30</span></button>';
+      h+='<button class="sel-ex-btn" id="selExCsv"><span class="sei">&#128202;</span><span class="set">\uc5d1\uc140 \uc800\uc7a5</span><span class="sed">\uc120\ud0dd \ud56d\ubaa9 CSV</span></button>';
+      h+='</div>';
+    }
   }
-  h+='<button class="save-btn" id="savHBtn">&#10010; \ud604\uc7ac \uacb0\uacfc \ubaa9\ub85d\uc5d0 \ucd94\uac00</button></div>';
-  h+='<div class="card"><div class="ct">\ubcf4\uace0\uc11c \ub0b4\ubcf4\ub0b4\uae30</div><div class="ex-grid">';
+  h+='<button class="save-btn" id="savHBtn">&#10010; \ud604\uc7ac \uacb0\uacfc \ubaa9\ub85d\uc5d0 \ucd94\uac00</button>';
+  h+='</div>';
+
+  /* \u2500\u2500 \ud604\uc7ac \ud504\ub85c\uc81d\ud2b8 \ubcf4\uace0\uc11c \uce74\ub4dc \u2500\u2500 */
+  h+='<div class="card"><div class="ct">\ud604\uc7ac \ud504\ub85c\uc81d\ud2b8 \ubcf4\uace0\uc11c</div><div class="ex-grid">';
   h+='<button class="ex-btn" id="exTxt"><span class="ei2">&#128203;</span><span class="et">\ud55c\uae00 \ubcf5\uc0ac</span><span class="ed">\uacb0\uc7ac\ubb38\uc11c\uc5d0 \ubd99\uc5ec\ub123\uae30</span></button>';
   h+='<button class="ex-btn" id="exCsv"><span class="ei2">&#128202;</span><span class="et">\uc5d1\uc140 \uc800\uc7a5</span><span class="ed">CSV \uc0b0\ucd9c\ub0b4\uc5ed\uc11c</span></button>';
   h+='<button class="ex-btn" id="exPdf"><span class="ei2">&#128196;</span><span class="et">PDF \uc800\uc7a5</span><span class="ed">\uacf5\uc2dd \ucca8\ubd80\ud30c\uc77c\uc6a9</span></button>';
@@ -1518,11 +1677,102 @@ function bindStep5(){
   var eu=qs('exUrl');   if(eu) eu.onclick=doShareUrl;
   var cp=qs('cpyBtn');  if(cp) cp.onclick=doCopy;
 
+  /* \u2500\u2500 \uae30\uac04 \ud544\ud130 \ud0ed \u2500\u2500 */
+  var pfBtns=document.querySelectorAll('[data-pf]');
+  for(var i=0;i<pfBtns.length;i++){
+    (function(btn){
+      btn.onclick=function(){
+        S.histFilter=btn.dataset.pf;
+        S.selHist=[];
+        render();
+      };
+    })(pfBtns[i]);
+  }
+
+  /* \u2500\u2500 \ub0a0\uc9dc \uae30\uc900 \ud1a0\uae00 \u2500\u2500 */
+  var dbBtns=document.querySelectorAll('[data-db]');
+  for(var i=0;i<dbBtns.length;i++){
+    (function(btn){
+      btn.onclick=function(){
+        S.histDateBase=btn.dataset.db;
+        S.selHist=[];
+        render();
+      };
+    })(dbBtns[i]);
+  }
+
+  /* \u2500\u2500 \uc804\uccb4 \uc120\ud0dd \uccb4\ud06c\ubc15\uc2a4 \u2500\u2500 */
+  var selAll=qs('selAll');
+  if(selAll) selAll.onchange=function(){
+    var fItems=filteredHistWithIdx();
+    if(selAll.checked){
+      var newSel={};
+      for(var i=0;i<S.selHist.length;i++) newSel[S.selHist[i]]=true;
+      for(var i=0;i<fItems.length;i++) newSel[fItems[i].idx]=true;
+      S.selHist=Object.keys(newSel).map(Number);
+    } else {
+      var removeSet={};
+      var fItems2=filteredHistWithIdx();
+      for(var i=0;i<fItems2.length;i++) removeSet[fItems2[i].idx]=true;
+      S.selHist=S.selHist.filter(function(idx){return !removeSet[idx];});
+    }
+    render();
+  };
+
+  /* \u2500\u2500 \uac1c\ubcc4 \uccb4\ud06c\ubc15\uc2a4 \u2500\u2500 */
+  var selChks=document.querySelectorAll('.hist-sel');
+  for(var i=0;i<selChks.length;i++){
+    (function(chk){
+      chk.onchange=function(){
+        var oi=parseInt(chk.dataset.oi);
+        if(chk.checked){
+          if(S.selHist.indexOf(oi)<0) S.selHist.push(oi);
+        } else {
+          S.selHist=S.selHist.filter(function(x){return x!==oi;});
+        }
+        render();
+      };
+    })(selChks[i]);
+  }
+
+  /* \u2500\u2500 \uc120\ud0dd \ud56d\ubaa9 \ubcf4\uace0\uc11c \ub0b4\ubcf4\ub0b4\uae30 \u2500\u2500 */
+  var selExTxt=qs('selExTxt');
+  if(selExTxt) selExTxt.onclick=function(){
+    var items=[];
+    for(var i=0;i<S.hist.length;i++){if(S.selHist.indexOf(i)>=0) items.push(S.hist[i]);}
+    if(!items.length){toast('\uc120\ud0dd\ub41c \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4'); return;}
+    var txt=makeMultiTxt(items);
+    var out=qs('tOut'), tTxt=qs('tTxt');
+    if(out&&tTxt){
+      tTxt.textContent=txt;
+      out.classList.remove('hidden');
+      out.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  };
+
+  var selExCsv=qs('selExCsv');
+  if(selExCsv) selExCsv.onclick=function(){
+    var items=[];
+    for(var i=0;i<S.hist.length;i++){if(S.selHist.indexOf(i)>=0) items.push(S.hist[i]);}
+    if(!items.length){toast('\uc120\ud0dd\ub41c \ud56d\ubaa9\uc774 \uc5c6\uc2b5\ub2c8\ub2e4'); return;}
+    var csv=makeMultiCsv(items);
+    var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    var period=filterLbl(S.histFilter);
+    a.href=url; a.download='\ub4dc\ub860\uc2e4\uc801_'+period+'_'+new Date().toISOString().slice(0,10)+'.csv';
+    a.click(); URL.revokeObjectURL(url);
+    toast(items.length+'\uac74 CSV \uc800\uc7a5 \uc644\ub8cc');
+  };
+
+  /* \u2500\u2500 \uc2e4\uc801 \uc0ad\uc81c \u2500\u2500 */
   var dibs=document.querySelectorAll('[data-di]');
   for(var i=0;i<dibs.length;i++){
     (function(btn){
       btn.onclick=function(){
-        S.hist.splice(parseInt(btn.dataset.di),1);
+        var idx=parseInt(btn.dataset.di);
+        S.hist.splice(idx,1);
+        S.selHist=S.selHist.filter(function(x){return x!==idx;}).map(function(x){return x>idx?x-1:x;});
         saveLs(); render();
       };
     })(dibs[i]);
