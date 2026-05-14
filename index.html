@@ -2390,8 +2390,22 @@ function copyReport(){
 }
 
 /* ===== 실적 자동 저장 (Google Sheets 백그라운드) ===== */
+var _sheetSaveKey = '';   // 마지막으로 저장한 프로젝트 식별키
+var _sheetSaveTime = 0;   // 마지막 저장 시각 (ms)
+var SHEET_COOLDOWN = 60000; // 동일 키 60초 이내 재저장 차단
+
 function autoSaveSheet(){
   if(!_cfg.url) return;
+  // 중복 저장 방지: 같은 사업명+면적 조합이 60초 이내에 이미 저장됐으면 스킵
+  var saveKey = (S.pName||'') + '_' + (S.area||0) + '_' + (S.gsd||0);
+  var now = Date.now();
+  if(saveKey === _sheetSaveKey && (now - _sheetSaveTime) < SHEET_COOLDOWN){
+    console.log('[Sheet] 중복 저장 차단:', saveKey);
+    return;
+  }
+  _sheetSaveKey = saveKey;
+  _sheetSaveTime = now;
+
   var payload = {
     key: _cfg.key,
     org: _cfg.org || '',
