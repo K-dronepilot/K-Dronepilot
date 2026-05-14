@@ -2390,20 +2390,38 @@ function copyReport(){
 }
 
 /* ===== 실적 자동 저장 (Google Sheets 백그라운드) ===== */
-var _sheetSaveKey = '';   // 마지막으로 저장한 프로젝트 식별키
-var _sheetSaveTime = 0;   // 마지막 저장 시각 (ms)
-var SHEET_COOLDOWN = 60000; // 동일 키 60초 이내 재저장 차단
+var _sheetSaveKey  = '';   // 마지막 저장 식별키
+var _sheetSaveTime = 0;    // 마지막 저장 시각(ms)
+var _sheetDupWarn  = false; // 중복 경고 대기 중
+var _sheetDupTimer = null;
+var SHEET_COOLDOWN = 60000; // 60초 이내 동일 키 → 경고
 
 function autoSaveSheet(){
-  if(!_cfg.url) return;
-  // 중복 저장 방지: 같은 사업명+면적 조합이 60초 이내에 이미 저장됐으면 스킵
-  var saveKey = (S.pName||'') + '_' + (S.area||0) + '_' + (S.gsd||0);
+  if(!_cfg.url) return true;
+  var saveKey = (S.pName||'드론측량')+'_'+(S.area||0)+'_'+(S.gsd||0);
   var now = Date.now();
+
   if(saveKey === _sheetSaveKey && (now - _sheetSaveTime) < SHEET_COOLDOWN){
-    console.log('[Sheet] 중복 저장 차단:', saveKey);
-    return;
+    if(!_sheetDupWarn){
+      /* 1차 감지: 경고 표시, 저장·진행 안 함 */
+      _sheetDupWarn = true;
+      clearTimeout(_sheetDupTimer);
+      _sheetDupTimer = setTimeout(function(){
+        _sheetDupWarn = false;
+        var btn = document.getElementById('rptNext');
+        if(btn) btn.textContent = '다음 프로젝트 계산하기 →';
+      }, 10000);
+      var btn = document.getElementById('rptNext');
+      if(btn) btn.innerHTML = '⚠️ 동일 프로젝트입니다. 한 번 더 클릭하면 추가 저장됩니다';
+      toast('⚠️ 동일 프로젝트가 이미 저장되어 있습니다.');
+      return false; /* 모달 유지 신호 */
+    }
+    /* 2차 클릭: 경고 해제 후 저장 진행 */
+    _sheetDupWarn = false;
+    clearTimeout(_sheetDupTimer);
   }
-  _sheetSaveKey = saveKey;
+
+  _sheetSaveKey  = saveKey;
   _sheetSaveTime = now;
 
   var payload = {
@@ -2441,10 +2459,12 @@ document.getElementById('cfgOverlay').addEventListener('click', function(e){ if(
 document.getElementById('rptClose').addEventListener('click', closeReport);
 document.getElementById('rptOverlay').addEventListener('click', function(e){ if(e.target===this) closeReport(); });
 document.getElementById('rptNext').addEventListener('click', function(){
-  autoSaveSheet();
+  var ok = autoSaveSheet();
+  if(ok === false) return; /* 중복 경고 중 — 모달 유지, 진행 안 함 */
   closeReport();
   S.step=1; S.area=0; S.ext=0; S.extQuote=0; S.saving=0; S.rate=0;
   S.bd=[]; S.dcosts={}; S.pName=''; S.shotDate=''; S.shotAlt=0; S.shotCount=0;
+  S.selHist=[];
   render(); window.scrollTo(0,0);
   toast('새 프로젝트를 시작합니다');
 });
