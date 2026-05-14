@@ -1540,7 +1540,6 @@ function addHist(){
   });
   gaEvent('calc_complete',{area:S.area,gsd:S.gsd,terrain:S.terrain,saving:S.saving,rate:Math.round(S.rate)});
   saveLs(); toast('\uc2e4\uc801\uc774 \uc800\uc7a5\ub418\uc5c8\uc2b5\ub2c8\ub2e4'); render();
-  autoSaveSheet();
 }
 
 /* ===== 보고서 ===== */
@@ -2139,6 +2138,7 @@ document.getElementById('cfgOverlay').addEventListener('click', function(e){ if(
 document.getElementById('rptClose').addEventListener('click', closeReport);
 document.getElementById('rptOverlay').addEventListener('click', function(e){ if(e.target===this) closeReport(); });
 document.getElementById('rptNext').addEventListener('click', function(){
+  autoSaveSheet();
   closeReport();
   S.step=1; S.area=0; S.ext=0; S.extQuote=0; S.saving=0; S.rate=0;
   S.bd=[]; S.dcosts={}; S.pName='';
