@@ -1025,27 +1025,6 @@ function r2(){
       h+='</div>';
     }
 
-    /* 공정 토글 */
-    for(var i=0;i<ITEMS.length;i++){
-      var it=ITEMS[i];
-      var lab=0;
-      for(var j=0;j<it.p.length;j++) lab+=(W[it.p[j][0]]||0)*it.p[j][1];
-      var unitAmt=Math.round(lab*gC*tC*aCoefFn(it.id,S.area));
-      var tipFull=it.tip+' | '+it.detail;
-      h+='<div class="proc-row'+(it.on?'':' off')+'" id="pr_'+it.id+'">';
-      h+='<button class="proc-toggle'+(it.on?' on':'')+'" data-pid="'+it.id+'"></button>';
-      h+='<div class="proc-body">';
-      h+='<div class="proc-name">'+it.n+buildTip(tipFull)+'</div>';
-      h+='<div class="proc-detail">'+it.detail.split('|')[0].trim()+'</div>';
-      h+='</div>';
-      if(it.on){
-        h+='<div class="proc-amt">'+fmt(unitAmt)+'</div>';
-      } else {
-        h+='<div class="proc-amt"><s style="color:var(--gray300)">'+fmt(unitAmt)+'</s></div>';
-      }
-      h+='</div>';
-    }
-
     var subItems=[], mainItems=[];
     for(var i=0;i<S.bd.length;i++){if(S.bd[i].sub)subItems.push(S.bd[i]);else mainItems.push(S.bd[i]);}
     var laborSum=0; for(var i=0;i<mainItems.length;i++) laborSum+=mainItems[i].a;
@@ -1057,6 +1036,29 @@ function r2(){
     h+='<div class="sum-box-row"><span>\uc678\ubd80 \uc6a9\uc5ed \ucd1d\uc561 (VAT \ud3ec\ud568)</span><span style="color:var(--blue)">'+fmt(S.ext)+'</span></div>';
     h+='</div>';
   }
+
+  /* \uacf5\uc815 \ud1a0\uae00 \u2014 \uba74\uc801 \ud06c\uae30 \ubb34\uad00\ud558\uac8c \ud56d\uc0c1 \ud45c\uc2dc */
+  h+='<div style="margin-top:14px">';
+  for(var i=0;i<ITEMS.length;i++){
+    var it=ITEMS[i];
+    var lab=0;
+    for(var j=0;j<it.p.length;j++) lab+=(W[it.p[j][0]]||0)*it.p[j][1];
+    var unitAmt=Math.round(lab*gC*tC*aCoefFn(it.id,S.area));
+    var tipFull=it.tip+' | '+it.detail;
+    h+='<div class="proc-row'+(it.on?'':' off')+'" id="pr_'+it.id+'">';
+    h+='<button class="proc-toggle'+(it.on?' on':'')+'" data-pid="'+it.id+'"></button>';
+    h+='<div class="proc-body">';
+    h+='<div class="proc-name">'+it.n+buildTip(tipFull)+'</div>';
+    h+='<div class="proc-detail">'+it.detail.split('|')[0].trim()+'</div>';
+    h+='</div>';
+    if(it.on){
+      h+='<div class="proc-amt">'+fmt(unitAmt)+'</div>';
+    } else {
+      h+='<div class="proc-amt"><s style="color:var(--gray300)">'+fmt(unitAmt)+'</s></div>';
+    }
+    h+='</div>';
+  }
+  h+='</div>';
 
   h+='</div>';
 
