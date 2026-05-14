@@ -387,7 +387,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;heigh
     </div>
     <div class="rpt-body" id="rptBody"></div>
     <div class="rpt-actions">
-      <button class="rpt-btn-main" id="rptAddHist">&#10010; 실적에 추가</button>
+      <button class="rpt-btn-main" id="rptNext">&#128640; 다음 프로젝트 계산하기</button>
       <button class="rpt-btn-sub" id="rptOdt">&#128203; 보고서 복사</button>
       <button class="rpt-btn-sub" id="rptPdf">&#128195; PDF 저장</button>
       <button class="rpt-btn-sub" id="rptTxt">&#128203; 한글 복사</button>
@@ -1993,7 +1993,7 @@ function openReport(){
   if(S.bd&&S.bd.length>0){
     for(var i=0;i<S.bd.length;i++){
       var b=S.bd[i];
-      h+='<tr><td>'+esc(b.n||b.role)+' ('+b.days+'일×'+fmt(b.daily)+')</td><td>'+fmt(b.days*b.daily)+'</td></tr>';
+      h+='<tr><td>'+esc(b.n)+'</td><td>'+fmt(b.a)+'</td></tr>';
     }
   }
   /* 소모품 */
@@ -2066,7 +2066,7 @@ function makeReportTxt(){
   if(S.bd&&S.bd.length>0){
     for(var i=0;i<S.bd.length;i++){
       var b=S.bd[i];
-      lines.push(row(b.n||b.role+' ('+b.days+'일 × '+fmt(b.daily)+')',fmt(b.days*b.daily)));
+      lines.push(row(b.n, fmt(b.a)));
     }
   }
   for(var i=0;i<DIRECT.length;i++){
@@ -2138,9 +2138,12 @@ document.getElementById('cfgOverlay').addEventListener('click', function(e){ if(
 
 document.getElementById('rptClose').addEventListener('click', closeReport);
 document.getElementById('rptOverlay').addEventListener('click', function(e){ if(e.target===this) closeReport(); });
-document.getElementById('rptAddHist').addEventListener('click', function(){
-  addHist();
+document.getElementById('rptNext').addEventListener('click', function(){
   closeReport();
+  S.step=1; S.area=0; S.ext=0; S.extQuote=0; S.saving=0; S.rate=0;
+  S.bd=[]; S.dcosts={}; S.pName='';
+  render(); window.scrollTo(0,0);
+  toast('새 프로젝트를 시작합니다');
 });
 document.getElementById('rptOdt').addEventListener('click', function(){
   copyReport();
